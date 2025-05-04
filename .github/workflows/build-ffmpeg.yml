@@ -131,6 +131,7 @@ jobs:
           --enable-gpl \
           --enable-gnutls \
           --enable-libass \
+          --enable-libdav1d \
           --enable-libfdk-aac \
           --enable-libfreetype \
           --enable-libmp3lame \
