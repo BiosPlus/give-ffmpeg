@@ -1,5 +1,5 @@
 # .github/workflows/build-ffmpeg.yml
-name: "Build FFMPEG"
+name: "Build FFmpeg for Linux"
 on:
   push:
     branches: [ main ]
@@ -102,7 +102,7 @@ jobs:
       - name: Install libdav1d for Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libdav1d-dev
-        
+
       - name: Debug directory
         run: |
           ls -al
@@ -128,5 +128,6 @@ jobs:
           --enable-libx264 \
           --enable-libx265 \
           --enable-nonfree \
+          --samples=fate-suite/
           make -j$(nproc)
           make install
