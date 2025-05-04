@@ -110,6 +110,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
             sudo apt-get install libdav1d-dev
+            cd ~/ffmpeg-source/
             ./configure --enable-libdav1d
 
       - name: Debug directory
