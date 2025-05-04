@@ -9,7 +9,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest] # Added ubuntu-latest for Linux x86
+        os: [ubuntu-latest]
+        arch: [x86_64, arm64]
 
     steps:
       - name: Checkout code
@@ -49,15 +50,9 @@ jobs:
       - name: Build FFmpeg
         run: |
           cd ffmpeg-source
-          ./configure --prefix=../build/${{ matrix.os }} --enable-gpl --enable-nonfree --enable-libass \
+          ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} --enable-gpl --enable-nonfree --enable-libass \
           --enable-libfdk-aac --enable-libfreetype \
           --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 --enable-libopus \
           --samples=fate-suite/
           make -j$(nproc)
           make install
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ffmpeg-${{ matrix.os }}
-          path: build/bin
