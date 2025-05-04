@@ -59,7 +59,7 @@ jobs:
             texinfo \
             wget \
             yasm \
-            zlib1g-dev \
+            zlib1g-dev
 
             echo "==========================="
             echo "Installing nasm dep"
