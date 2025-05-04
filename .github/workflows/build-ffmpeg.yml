@@ -115,7 +115,8 @@ jobs:
         run: |
             sudo apt-get install libdav1d-dev
             cd ffmpeg-source
-            ./configure --enable-libdav1d
+            ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
+            --enable-libdav1d
 
       - name: Debug directory
         run: |
