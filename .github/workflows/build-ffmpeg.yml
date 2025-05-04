@@ -25,6 +25,13 @@ jobs:
             echo "Using cached FFmpeg source"
           fi
 
+      - name: Debug directory
+        run: |
+          ls -al ~
+          ls -al ffmpeg-source
+          echo "PATH is: $PATH"
+
+
       - name: Update packages for Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update
