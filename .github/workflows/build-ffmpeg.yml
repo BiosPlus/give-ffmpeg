@@ -27,7 +27,7 @@ jobs:
       - name: Set up environment
         run: |
           if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-            brew install yasm x264 x265;
+            brew install automake fdk-aac git lame libass libtool libvorbis libvpx opus sdl shtool texi2html theora wget x264 x265 xvid nasm
           fi
 
       - name: Build FFmpeg
