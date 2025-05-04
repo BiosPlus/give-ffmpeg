@@ -17,9 +17,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Cache FFmpeg source
+        uses: actions/cache@v3
+        with:
+          path: ffmpeg-source
+          key: ${{ runner.os }}-ffmpeg-source-${{ hashFiles('**/build-ffmpeg.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-ffmpeg-source-
+
       - name: Checkout FFmpeg repository
         run: |
-          git clone https://github.com/FFmpeg/FFmpeg ffmpeg-source --verbose
+          if [ ! -d "ffmpeg-source/.git" ]; then
+            git clone https://github.com/FFmpeg/FFmpeg ffmpeg-source --verbose
+          else
+            echo "Using cached FFmpeg source"
+          fi
+
+      - name: Cache Ubuntu dependencies
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/apt
+          key: ${{ runner.os }}-apt-cache-${{ hashFiles('**/build-ffmpeg.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-apt-cache-
 
       - name: Update packages for Ubuntu
         if: matrix.os == 'ubuntu-latest'
@@ -102,6 +123,14 @@ jobs:
       - name: Install libdav1d for Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libdav1d-dev
+
+      - name: Cache FFmpeg build artifacts
+        uses: actions/cache@v3
+        with:
+          path: build
+          key: ${{ runner.os }}-ffmpeg-build-${{ matrix.arch }}-${{ hashFiles('**/build-ffmpeg.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-ffmpeg-build-${{ matrix.arch }}-
 
       - name: Debug directory
         run: |
