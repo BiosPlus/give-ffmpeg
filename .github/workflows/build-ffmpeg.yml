@@ -38,10 +38,6 @@ jobs:
           ls -al
           ls -al ffmpeg-source
           echo "PATH is: $PATH"
-          which uname
-          which tr
-          which mkdir
-          which sed
 
       - name: Build FFmpeg
         run: |
