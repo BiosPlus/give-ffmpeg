@@ -19,11 +19,7 @@ jobs:
 
       - name: Checkout FFmpeg repository
         run: |
-          if [ ! -d "ffmpeg-source/.git" ]; then
             git clone https://github.com/FFmpeg/FFmpeg ffmpeg-source --verbose
-          else
-            echo "Using cached FFmpeg source"
-          fi
 
       - name: Debug directory
         run: |
