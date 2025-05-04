@@ -48,7 +48,7 @@ jobs:
           cd ffmpeg-source
           ./configure --prefix=../build/${{ matrix.os }} --enable-gpl --enable-nonfree --enable-libass \
           --enable-libfdk-aac --enable-libfreetype \
-          --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 --enable-libopus --enable-libxvid \
+          --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 --enable-libopus \
           --samples=fate-suite/
           make -j$(nproc)
           make install
