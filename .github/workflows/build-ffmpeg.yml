@@ -16,10 +16,8 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Checkout FFmpeg repository
-        uses: actions/checkout@v3
-        with:
-            repository: FFmpeg/FFmpeg
-            path: ffmpeg-source
+        run: |
+          git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg-source
   
       - name: Debug directory
         run: |
@@ -35,7 +33,10 @@ jobs:
       - name: Build FFmpeg
         run: |
           cd ffmpeg-source
-          ./configure --enable-gpl --enable-libx264 --enable-libx265 --disable-doc --disable-programs --enable-shared --prefix=../build/${{ matrix.os }}
+          ./configure --prefix=../build/${{ matrix.os }} --enable-gpl --enable-nonfree --enable-libass \
+          --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame \
+          --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 --enable-libopus --enable-libxvid \
+          --samples=fate-suite/
           make -j$(nproc)
           make install
 
