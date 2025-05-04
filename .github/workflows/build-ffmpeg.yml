@@ -91,7 +91,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
             set +e
-            cd ~/ffmpeg-source
+            cd ffmpeg-source
             git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom
             mkdir -p aom_build
             cd aom_build
@@ -108,7 +108,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
             set +e
-            cd ~/ffmpeg-source
+            cd ffmpeg-source
             git -C SVT-AV1 pull 2> /dev/null || git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
             mkdir -p SVT-AV1/build
             cd SVT-AV1/build
