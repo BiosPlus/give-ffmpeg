@@ -21,6 +21,11 @@ jobs:
             repository: FFmpeg/FFmpeg
             path: ffmpeg-source
   
+      - name: Debug directory
+        run: |
+          ls -al
+          ls -al ffmpeg-source
+
       - name: Set up environment
         run: |
           if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
@@ -29,7 +34,8 @@ jobs:
 
       - name: Build FFmpeg
         run: |
-          ./configure --enable-gpl --enable-libx264 --enable-libx265 --disable-doc --disable-programs --enable-shared --prefix=./build/${{ matrix.os }}
+          cd ffmpeg-source
+          ./configure --enable-gpl --enable-libx264 --enable-libx265 --disable-doc --disable-programs --enable-shared --prefix=../build/${{ matrix.os }}
           make -j$(nproc)
           make install
 
