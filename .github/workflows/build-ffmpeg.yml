@@ -1,0 +1,40 @@
+# .github/workflows/build-ffmpeg.yml
+name: "Build FFMPEG"
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Checkout FFmpeg repository
+        uses: actions/checkout@v3
+        with:
+            repository: FFmpeg/FFmpeg
+            path: ffmpeg-source
+  
+      - name: Set up environment
+        run: |
+          if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            brew install yasm x264 x265;
+          fi
+
+      - name: Build FFmpeg
+        run: |
+          ./configure --enable-gpl --enable-libx264 --enable-libx265 --disable-doc --disable-programs --enable-shared --prefix=./build/${{ matrix.os }}
+          make -j$(nproc)
+          make install
+
+    #   - name: Upload artifacts
+    #     uses: actions/upload-artifact@v3
+    #     with:
+    #       name: ffmpeg-${{ matrix.os }}
+    #       path: build/bin
