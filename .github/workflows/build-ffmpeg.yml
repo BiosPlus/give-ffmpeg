@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest] # Added ubuntu-latest for Linux x86
+        os: [ubuntu-latest] # Added ubuntu-latest for Linux x86
 
     steps:
       - name: Checkout code
@@ -26,8 +26,9 @@ jobs:
             --verbose;
           elif [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
             sudo apt-get update
-            sudo apt-get install -y automake build-essential cmake git libass-dev libfreetype6-dev libtool libvorbis-dev \
-            libvpx-dev pkg-config texinfo wget yasm zlib1g-dev libx264-dev libx265-dev libnuma-dev libfdk-aac-dev libopus-dev
+            sudo apt-get install -y automake build-essential cmake git libass-dev libfdk-aac-dev libfreetype6-dev \
+            libnuma-dev libopus-dev libtool libvorbis-dev libvpx-dev libx264-dev libx265-dev nasm pkg-config \
+            texinfo wget yasm zlib1g-dev
           fi
 
       - name: Clean up environment
