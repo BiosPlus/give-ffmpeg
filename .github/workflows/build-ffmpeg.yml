@@ -21,21 +21,13 @@ jobs:
         run: |
           git clone https://github.com/FFmpeg/FFmpeg ffmpeg-source --verbose
 
-      - name: Set up environment
+      - name: Update packages for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update
+
+      - name: Install base dependencies for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-            brew install automake fdk-aac lame libass libtool libvorbis libvpx opus sdl shtool texi2html theora x264 x265 xvid nasm \
-            --verbose;
-          elif [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-
-            echo "==========================="
-            echo "Making updating packages"
-            echo "==========================="
-            sudo apt-get update
-
-            echo "==========================="
-            echo "Installing base deps"
-            echo "=========================="
             sudo apt-get install -y autoconf \
             automake \
             build-essential \
@@ -61,39 +53,33 @@ jobs:
             yasm \
             zlib1g-dev
 
-            echo "==========================="
-            echo "Installing nasm dep"
-            echo "=========================="
-            sudo apt-get install nasm
-        
-            echo "==========================="
-            echo "Installing x264 dep"
-            echo "=========================="
-            sudo apt-get install libx264-dev
+      - name: Install nasm for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install nasm
 
-            echo "==========================="
-            echo "Installing x265 dep"
-            echo "=========================="
-            sudo apt-get install libx265-dev libnuma-dev
+      - name: Install x264 for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install libx264-dev
 
-            echo "==========================="
-            echo "Installing libvpx dep"
-            echo "==========================="
-            sudo apt-get install libvpx-dev
+      - name: Install x265 for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install libx265-dev libnuma-dev
 
-            echo "==========================="
-            echo "Installing libfdk-aac dep"
-            echo "==========================="
-            sudo apt-get install libfdk-aac-dev
+      - name: Install libvpx for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install libvpx-dev
 
-            echo "==========================="
-            echo "Installing libopus dep"
-            echo "==========================="
-            sudo apt-get install libopus-dev
+      - name: Install libfdk-aac for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install libfdk-aac-dev
 
-            echo "==========================="
-            echo "Installing aom dep"
-            echo "==========================="
+      - name: Install libopus for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install libopus-dev
+
+      - name: Install aom for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: |
             cd ~/ffmpeg-source && \
             git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom && \
             mkdir -p aom_build && \
@@ -102,9 +88,9 @@ jobs:
             PATH="$HOME/bin:$PATH" make && \
             make install
 
-            echo "==========================="
-            echo "Installing SVT-AV1 dep"
-            echo "==========================="
+      - name: Install SVT-AV1 for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: |
             cd ~/ffmpeg-source && \
             git -C SVT-AV1 pull 2> /dev/null || git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git && \
             mkdir -p SVT-AV1/build && \
@@ -113,34 +99,10 @@ jobs:
             PATH="$HOME/bin:$PATH" make && \
             make install
 
-            echo "==========================="
-            echo "Installing libdav1d dep"
-            echo "==========================="
-            sudo apt-get install libdav1d-dev
-
-            # echo "==========================="
-            # echo "Installing libvmaf dep"
-            # echo "==========================="
-            # cd ~/ffmpeg-source && \
-            # wget https://github.com/Netflix/vmaf/archive/v3.0.0.tar.gz && \
-            # tar xvf v3.0.0.tar.gz && \
-            # mkdir -p vmaf-3.0.0/libvmaf/build &&\
-            # cd vmaf-3.0.0/libvmaf/build && \
-            # meson setup -Denable_tests=false -Denable_docs=false --buildtype=release --default-library=static .. --prefix "$HOME/ffmpeg_build" --bindir="$HOME/bin" --libdir="$HOME/ffmpeg_build/lib" && \
-            # ninja && \
-            # ninja install
-            
-          fi
-
-      - name: Clean up environment
-        run: |
-          if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-            if type brew &>/dev/null; then
-              HOMEBREW_PREFIX=$(brew --prefix)
-              for d in ${HOMEBREW_PREFIX}/opt/*/libexec/gnubin; do export PATH=$d:$PATH; done
-            fi
-          fi
-
+      - name: Install libdav1d for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install libdav1d-dev
+        
       - name: Debug directory
         run: |
           ls -al
