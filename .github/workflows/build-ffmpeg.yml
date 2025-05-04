@@ -88,36 +88,51 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libopus-dev
 
-      # - name: Install aom for Ubuntu
-      #   if: matrix.os == 'ubuntu-latest'
-      #   run: |
-      #       cd ~/ffmpeg-source && \
-      #       git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom && \
-      #       mkdir -p aom_build && \
-      #       cd aom_build && \
-      #       PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=OFF -DENABLE_NASM=on ../aom && \
-      #       PATH="$HOME/bin:$PATH" make && \
-      #       make install && \
-      #       touch ~/aom_installed.flag
+      - name: Install aom for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+            set +e
+            cd ~/ffmpeg-source
+            git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom
+            mkdir -p aom_build
+            cd aom_build
+            PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=OFF -DENABLE_NASM=on ../aom
+            PATH="$HOME/bin:$PATH" make
+            if [ $? -eq 0 ]; then
+              make install
+              touch ~/aom_installed.flag
+            else
+              echo "aom installation failed, continuing without it."
+            fi
 
-    #   - name: Install SVT-AV1 for Ubuntu
-    #     if: matrix.os == 'ubuntu-latest'
-    #     run: |
-    #         cd ~/ffmpeg-source && \
-    #         git -C SVT-AV1 pull 2> /dev/null || git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git && \
-    #         mkdir -p SVT-AV1/build && \
-    #         cd SVT-AV1/build && \
-    #         PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DCMAKE_BUILD_TYPE=Release -DBUILD_DEC=OFF -DBUILD_SHARED_LIBS=OFF .. && \
-    #         PATH="$HOME/bin:$PATH" make && \
-    #         make install
-    #         ./configure --enable-libsvtav1 
+      - name: Install SVT-AV1 for Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+            set +e
+            cd ~/ffmpeg-source
+            git -C SVT-AV1 pull 2> /dev/null || git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
+            mkdir -p SVT-AV1/build
+            cd SVT-AV1/build
+            PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DCMAKE_BUILD_TYPE=Release -DBUILD_DEC=OFF -DBUILD_SHARED_LIBS=OFF ..
+            PATH="$HOME/bin:$PATH" make
+            if [ $? -eq 0 ]; then
+              make install
+              touch ~/svtav1_installed.flag
+            else
+              echo "SVT-AV1 installation failed, continuing without it."
+            fi
 
       - name: Install libdav1d for Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: |
+            set +e
             sudo apt-get install libdav1d-dev
-            cd ffmpeg-source
-            touch ~/libdav1d_installed.flag
+            if [ $? -eq 0 ]; then
+              cd ffmpeg-source
+              touch ~/libdav1d_installed.flag
+            else
+              echo "libdav1d installation failed, continuing without it."
+            fi
 
       - name: Debug directory
         run: |
@@ -139,6 +154,11 @@ jobs:
             DAV1D_FLAG="--enable-libdav1d"
           fi
 
+          SVTAV1_FLAG=""
+          if [ -f ~/svtav1_installed.flag ]; then
+            SVTAV1_FLAG="--enable-libsvtav1"
+          fi
+
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
           --arch=${{ matrix.arch }} \
           --target-os=linux \
@@ -146,6 +166,7 @@ jobs:
           --enable-gnutls \
           ${AOM_FLAG} \
           ${DAV1D_FLAG} \
+          ${SVTAV1_FLAG} \
           --enable-libass \
           --enable-libfdk-aac \
           --enable-libfreetype \
