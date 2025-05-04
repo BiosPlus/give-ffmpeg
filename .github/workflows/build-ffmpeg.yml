@@ -18,11 +18,6 @@ jobs:
       - name: Checkout FFmpeg repository
         run: |
           git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg-source
-  
-      - name: Debug directory
-        run: |
-          ls -al
-          ls -al ffmpeg-source
 
       - name: Set up environment
         run: |
@@ -31,6 +26,18 @@ jobs:
             --verbose;
             echo 'PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"' >> $GITHUB_ENV;
           fi
+
+
+      - name: Debug directory
+        run: |
+          ls -al
+          ls -al ffmpeg-source
+          source $GITHUB_ENV
+          echo "PATH is: $PATH"
+          which uname
+          which tr
+          which mkdir
+          which sed
 
       - name: Build FFmpeg
         run: |
