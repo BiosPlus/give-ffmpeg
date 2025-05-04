@@ -81,17 +81,17 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libopus-dev
 
-      - name: Install aom for Ubuntu
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-            cd ~/ffmpeg-source && \
-            git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom && \
-            mkdir -p aom_build && \
-            cd aom_build && \
-            PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=OFF -DENABLE_NASM=on ../aom && \
-            PATH="$HOME/bin:$PATH" make && \
-            make install && \
-            touch ~/aom_installed.flag
+    #   - name: Install aom for Ubuntu
+    #     if: matrix.os == 'ubuntu-latest'
+    #     run: |
+    #         cd ~/ffmpeg-source && \
+    #         git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom && \
+    #         mkdir -p aom_build && \
+    #         cd aom_build && \
+    #         PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=OFF -DENABLE_NASM=on ../aom && \
+    #         PATH="$HOME/bin:$PATH" make && \
+    #         make install && \
+    #         touch ~/aom_installed.flag
 
       - name: Install SVT-AV1 for Ubuntu
         if: matrix.os == 'ubuntu-latest'
