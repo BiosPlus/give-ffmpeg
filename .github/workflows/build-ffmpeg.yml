@@ -88,16 +88,17 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libopus-dev
 
-    #   - name: Install aom for Ubuntu
-    #     if: matrix.os == 'ubuntu-latest'
-    #     run: |
-    #         cd ~/ffmpeg-source && \
-    #         git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom && \
-    #         mkdir -p aom_build && \
-    #         cd aom_build && \
-    #         PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=OFF -DENABLE_NASM=on ../aom && \
-    #         PATH="$HOME/bin:$PATH" make && \
-    #         make install
+      # - name: Install aom for Ubuntu
+      #   if: matrix.os == 'ubuntu-latest'
+      #   run: |
+      #       cd ~/ffmpeg-source && \
+      #       git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom && \
+      #       mkdir -p aom_build && \
+      #       cd aom_build && \
+      #       PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=OFF -DENABLE_NASM=on ../aom && \
+      #       PATH="$HOME/bin:$PATH" make && \
+      #       make install && \
+      #       touch ~/aom_installed.flag
 
     #   - name: Install SVT-AV1 for Ubuntu
     #     if: matrix.os == 'ubuntu-latest'
@@ -116,8 +117,7 @@ jobs:
         run: |
             sudo apt-get install libdav1d-dev
             cd ffmpeg-source
-            ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
-            --enable-libdav1d
+            touch ~/libdav1d_installed.flag
 
       - name: Debug directory
         run: |
@@ -128,13 +128,25 @@ jobs:
       - name: Build FFmpeg
         run: |
           cd ffmpeg-source
+
+          AOM_FLAG=""
+          if [ -f ~/aom_installed.flag ]; then
+            AOM_FLAG="--enable-libaom"
+          fi
+
+          DAV1D_FLAG=""
+          if [ -f ~/libdav1d_installed.flag ]; then
+            DAV1D_FLAG="--enable-libdav1d"
+          fi
+
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
           --arch=${{ matrix.arch }} \
           --target-os=linux \
           --enable-gpl \
           --enable-gnutls \
+          ${AOM_FLAG} \
+          ${DAV1D_FLAG} \
           --enable-libass \
-          --enable-libdav1d \
           --enable-libfdk-aac \
           --enable-libfreetype \
           --enable-libmp3lame \
