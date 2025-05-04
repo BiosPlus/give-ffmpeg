@@ -118,17 +118,18 @@ jobs:
             echo "==========================="
             sudo apt-get install libdav1d-dev
 
-            echo "==========================="
-            echo "Installing libvmaf dep"
-            echo "==========================="
-            cd ~/ffmpeg-source && \
-            wget https://github.com/Netflix/vmaf/archive/v3.0.0.tar.gz && \
-            tar xvf v3.0.0.tar.gz && \
-            mkdir -p vmaf-3.0.0/libvmaf/build &&\
-            cd vmaf-3.0.0/libvmaf/build && \
-            meson setup -Denable_tests=false -Denable_docs=false --buildtype=release --default-library=static .. --prefix "$HOME/ffmpeg_build" --bindir="$HOME/bin" --libdir="$HOME/ffmpeg_build/lib" && \
-            ninja && \
-            ninja install
+            # echo "==========================="
+            # echo "Installing libvmaf dep"
+            # echo "==========================="
+            # cd ~/ffmpeg-source && \
+            # wget https://github.com/Netflix/vmaf/archive/v3.0.0.tar.gz && \
+            # tar xvf v3.0.0.tar.gz && \
+            # mkdir -p vmaf-3.0.0/libvmaf/build &&\
+            # cd vmaf-3.0.0/libvmaf/build && \
+            # meson setup -Denable_tests=false -Denable_docs=false --buildtype=release --default-library=static .. --prefix "$HOME/ffmpeg_build" --bindir="$HOME/bin" --libdir="$HOME/ffmpeg_build/lib" && \
+            # ninja && \
+            # ninja install
+            
           fi
 
       - name: Clean up environment
