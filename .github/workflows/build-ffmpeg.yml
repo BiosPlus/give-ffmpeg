@@ -27,7 +27,9 @@ jobs:
       - name: Set up environment
         run: |
           if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-            brew install automake fdk-aac lame libass libtool libvorbis libvpx opus sdl shtool texi2html theora x264 x265 xvid nasm;
+            brew install automake fdk-aac lame libass libtool libvorbis libvpx opus sdl shtool texi2html theora x264 x265 xvid nasm \
+            --verbose;
+            echo 'PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"' >> $GITHUB_ENV;
           fi
 
       - name: Build FFmpeg
