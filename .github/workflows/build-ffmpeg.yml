@@ -90,7 +90,8 @@ jobs:
             cd aom_build && \
             PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=OFF -DENABLE_NASM=on ../aom && \
             PATH="$HOME/bin:$PATH" make && \
-            make install
+            make install && \
+            touch ~/aom_installed.flag
 
       - name: Install SVT-AV1 for Ubuntu
         if: matrix.os == 'ubuntu-latest'
@@ -116,10 +117,14 @@ jobs:
       - name: Build FFmpeg
         run: |
           cd ffmpeg-source
+          AOM_FLAG=""
+          if [ -f ~/aom_installed.flag ]; then
+            AOM_FLAG="--enable-libaom"
+          fi
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
           --enable-gpl \
           --enable-gnutls \
-          # --enable-libaom \
+          $AOM_FLAG \
           --enable-libass \
           --enable-libfdk-aac \
           --enable-libfreetype \
