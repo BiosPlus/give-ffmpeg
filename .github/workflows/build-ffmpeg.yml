@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        arch: [x86_64, arm64, i386, ppc64le, s390x]
+        arch: [x86_64, arm64, i386, ppc64le, s390x, x86]
 
     steps:
       - name: Checkout code
