@@ -27,10 +27,108 @@ jobs:
             brew install automake fdk-aac lame libass libtool libvorbis libvpx opus sdl shtool texi2html theora x264 x265 xvid nasm \
             --verbose;
           elif [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+
+            echo "==========================="
+            echo "Making updating packages"
+            echo "==========================="
             sudo apt-get update
-            sudo apt-get install -y automake build-essential cmake git libass-dev libfdk-aac-dev libfreetype6-dev \
-            libnuma-dev libopus-dev libtool libvorbis-dev libvpx-dev libx264-dev libx265-dev nasm pkg-config \
-            texinfo wget yasm zlib1g-dev
+
+            echo "==========================="
+            echo "Installing base deps"
+            echo "=========================="
+            sudo apt-get install -y autoconf \
+            automake \
+            build-essential \
+            cmake \
+            git-core \
+            libass-dev \
+            libfreetype6-dev \
+            libgnutls28-dev \
+            libmp3lame-dev \
+            libsdl2-dev \
+            libtool \
+            libva-dev \
+            libvdpau-dev \
+            libvorbis-dev \
+            libxcb1-dev \
+            libxcb-shm0-dev \
+            libxcb-xfixes0-dev \
+            meson \
+            ninja-build \
+            pkg-config \
+            texinfo \
+            wget \
+            yasm \
+            zlib1g-dev \
+
+            echo "==========================="
+            echo "Installing nasm dep"
+            echo "=========================="
+            sudo apt-get install nasm
+        
+            echo "==========================="
+            echo "Installing x264 dep"
+            echo "=========================="
+            sudo apt-get install libx264-dev
+
+            echo "==========================="
+            echo "Installing x265 dep"
+            echo "=========================="
+            sudo apt-get install libx265-dev libnuma-dev
+
+            echo "==========================="
+            echo "Installing libvpx dep"
+            echo "==========================="
+            sudo apt-get install libvpx-dev
+
+            echo "==========================="
+            echo "Installing libfdk-aac dep"
+            echo "==========================="
+            sudo apt-get install libfdk-aac-dev
+
+            echo "==========================="
+            echo "Installing libopus dep"
+            echo "==========================="
+            sudo apt-get install libopus-dev
+
+            echo "==========================="
+            echo "Installing aom dep"
+            echo "==========================="
+            cd ~/ffmpeg-source && \
+            git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom && \
+            mkdir -p aom_build && \
+            cd aom_build && \
+            PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=OFF -DENABLE_NASM=on ../aom && \
+            PATH="$HOME/bin:$PATH" make && \
+            make install
+
+            echo "==========================="
+            echo "Installing SVT-AV1 dep"
+            echo "==========================="
+            cd ~/ffmpeg-source && \
+            git -C SVT-AV1 pull 2> /dev/null || git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git && \
+            mkdir -p SVT-AV1/build && \
+            cd SVT-AV1/build && \
+            PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DCMAKE_BUILD_TYPE=Release -DBUILD_DEC=OFF -DBUILD_SHARED_LIBS=OFF .. && \
+            PATH="$HOME/bin:$PATH" make && \
+            make install
+
+            echo "==========================="
+            echo "Installing libdav1d dep"
+            echo "==========================="
+            sudo apt-get install libdav1d-dev
+
+            echo "==========================="
+            echo "Installing libvmaf dep"
+            echo "==========================="
+            cd ~/ffmpeg-source && \
+            wget https://github.com/Netflix/vmaf/archive/v3.0.0.tar.gz && \
+            tar xvf v3.0.0.tar.gz && \
+            mkdir -p vmaf-3.0.0/libvmaf/build &&\
+            cd vmaf-3.0.0/libvmaf/build && \
+            meson setup -Denable_tests=false -Denable_docs=false --buildtype=release --default-library=static .. --prefix "$HOME/ffmpeg_build" --bindir="$HOME/bin" --libdir="$HOME/ffmpeg_build/lib" && \
+            ninja && \
+            ninja install
           fi
 
       - name: Clean up environment
@@ -51,9 +149,21 @@ jobs:
       - name: Build FFmpeg
         run: |
           cd ffmpeg-source
-          ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} --enable-gpl --enable-nonfree --enable-libass \
-          --enable-libfdk-aac --enable-libfreetype \
-          --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 --enable-libopus \
-          --samples=fate-suite/
+          ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
+          --enable-gpl \
+          --enable-gnutls \
+          --enable-libaom \
+          --enable-libass \
+          --enable-libfdk-aac \
+          --enable-libfreetype \
+          --enable-libmp3lame \
+          --enable-libopus \
+          --enable-libsvtav1 \
+          --enable-libdav1d \
+          --enable-libvorbis \
+          --enable-libvpx \
+          --enable-libx264 \
+          --enable-libx265 \
+          --enable-nonfree \
           make -j$(nproc)
           make install
