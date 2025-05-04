@@ -27,14 +27,14 @@ jobs:
       - name: Set up environment
         run: |
           if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-            brew install automake fdk-aac lame libass libtool libvorbis libvpx opus sdl shtool texi2html theora x264 x265 xvid nasm
+            brew install automake fdk-aac lame libass libtool libvorbis libvpx opus sdl shtool texi2html theora x264 x265 xvid nasm;
           fi
 
       - name: Build FFmpeg
         run: |
           cd ffmpeg-source
           ./configure --prefix=../build/${{ matrix.os }} --enable-gpl --enable-nonfree --enable-libass \
-          --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame \
+          --enable-libfdk-aac --enable-libfreetype \
           --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 --enable-libopus --enable-libxvid \
           --samples=fate-suite/
           make -j$(nproc)
