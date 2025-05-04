@@ -144,7 +144,7 @@ jobs:
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
           --enable-gpl \
           --enable-gnutls \
-        #   --enable-libaom \
+          # --enable-libaom \
           --enable-libass \
           --enable-libfdk-aac \
           --enable-libfreetype \
