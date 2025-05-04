@@ -23,6 +23,8 @@ jobs:
 
       - name: Debug directory
         run: |
+          echo "Directory is:"
+          pwd
           ls -al ~
           ls -al ffmpeg-source
           echo "PATH is: $PATH"
