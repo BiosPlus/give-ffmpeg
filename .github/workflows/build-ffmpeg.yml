@@ -24,6 +24,7 @@ jobs:
           if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
             brew install automake fdk-aac lame libass libtool libvorbis libvpx opus sdl shtool texi2html theora x264 x265 xvid nasm \
             --verbose;
+            brew install libtheora
           fi
 
       - name: Clean up macOS environment
