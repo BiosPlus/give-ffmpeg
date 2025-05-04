@@ -11,7 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        arch: [x86_64]
+        arch: [x86_64, aarch64, arm, riscv, ppc, s390]
+        
 
     steps:
       - name: Checkout code
@@ -128,6 +129,8 @@ jobs:
         run: |
           cd ffmpeg-source
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
+          --arch=${{ matrix.arch }} \
+          --target-os=linux \
           --enable-gpl \
           --enable-gnutls \
           --enable-libass \
