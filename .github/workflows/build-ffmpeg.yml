@@ -17,7 +17,11 @@ jobs:
 
       - name: Checkout FFmpeg repository
         run: |
-          git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg-source --verbose
+          timeout 2m git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg-source --verbose || {
+            echo "Cloning from git.ffmpeg.org failed. Falling back to GitHub mirror.";
+            rm -rf ffmpeg-source;
+            git clone https://github.com/FFmpeg/FFmpeg ffmpeg-source --verbose;
+          }
 
       - name: Set up environment
         run: |
