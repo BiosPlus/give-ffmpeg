@@ -233,7 +233,7 @@ jobs:
       
           touch "$HOME/libdav1d_installed.flag"
       
-      - name: Build VMAF from source (Ubuntu only)
+      - name: Build VMAF from source
         if: matrix.os == 'ubuntu-latest'
         run: |
           VMAF_VERSION="v3.0.0"
