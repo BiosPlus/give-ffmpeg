@@ -188,12 +188,6 @@ jobs:
               echo "libdav1d installation failed, continuing without it."
             fi
 
-      - name: Debug directory
-        run: |
-          ls -al
-          ls -al ffmpeg-source
-          echo "PATH is: $PATH"
-
       - name: Build FFmpeg
         run: |
           cd ffmpeg-source
