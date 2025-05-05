@@ -229,7 +229,7 @@ jobs:
             --libdir="$DAV1D_INSTALL_DIR/lib" \
             -Denable_tools=false \
             -Denable_tests=false \
-            ..
+            "$DAV1D_SRC_DIR"
       
           ninja
           ninja install
