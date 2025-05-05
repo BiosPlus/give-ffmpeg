@@ -61,14 +61,6 @@ jobs:
             ~/svtav1_installed.flag
           key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
 
-      - name: Debug directory
-        run: |
-          echo "Directory is:"
-          pwd
-          ls -al ~
-          ls -al ffmpeg-source
-          echo "PATH is: $PATH"
-
       - name: Update packages for Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update
