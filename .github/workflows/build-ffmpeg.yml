@@ -251,6 +251,8 @@ jobs:
           wget -q "https://github.com/Netflix/vmaf/archive/$VMAF_TARBALL"
           tar xf "$VMAF_TARBALL"
       
+          ls -lhR  
+
           mkdir -p "$VMAF_BUILD_DIR"
           cd "$VMAF_BUILD_DIR"
       
