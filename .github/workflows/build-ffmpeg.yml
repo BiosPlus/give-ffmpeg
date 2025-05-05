@@ -23,14 +23,24 @@ jobs:
           repository: FFmpeg/FFmpeg
           path: ffmpeg-source
 
-      - name: Cache FFmpeg source
+      - name: Clone AOM source
+        run: |
+          cd ffmpeg-source
+          git clone --depth 1 https://aomedia.googlesource.com/aom
+        
+      - name: Get AOM commit hash
+        id: aom_hash
+        run: |
+          cd ffmpeg-source/aom
+          echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache AOM build
         uses: actions/cache@v3
         with:
-          path: ~/ffmpeg-source
-          key: ffmpeg-source-${{ runner.os }}-${{ hashFiles('**/ffmpeg-source/**') }}
-          restore-keys: |
-            ffmpeg-source-${{ runner.os }}-
-            ffmpeg-source-
+          path: |
+            ~/ffmpeg_build
+            ~/aom_installed.flag
+          key: aom-${{ runner.os }}-${{ steps.aom_hash.outputs.hash }}
 
       - name: Debug directory
         run: |
@@ -99,19 +109,18 @@ jobs:
       - name: Install aom for Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: |
-            set +e
-            cd ffmpeg-source
-            git -C aom pull 2> /dev/null || git clone --depth 1 https://aomedia.googlesource.com/aom
-            mkdir -p aom_build
-            cd aom_build
-            PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=OFF -DENABLE_NASM=on ../aom
-            PATH="$HOME/bin:$PATH" make
-            if [ $? -eq 0 ]; then
-              make install
-              touch ~/aom_installed.flag
-            else
-              echo "aom installation failed, continuing without it."
-            fi
+          if [ -f ~/aom_installed.flag ]; then
+            echo "AOM already installed from cache."
+            exit 0
+          fi
+      
+          cd ffmpeg-source
+          mkdir -p aom_build
+          cd aom_build
+          PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_TESTS=OFF -DENABLE_NASM=on ../aom
+          PATH="$HOME/bin:$PATH" make -j$(nproc)
+          make install
+          touch ~/aom_installed.flag
 
       - name: Install SVT-AV1 for Ubuntu
         if: matrix.os == 'ubuntu-latest'
