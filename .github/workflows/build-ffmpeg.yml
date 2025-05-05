@@ -54,6 +54,12 @@ jobs:
           cd ~/ffmpeg_sources/SVT-AV1
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
+      - name: Get dav1d commit hash
+        id: dav1d_hash
+        run: |
+          cd ~/ffmpeg_sources/dav1d
+          echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"    
+
       - name: Cache AOM build
         uses: actions/cache@v3
         with:
@@ -71,6 +77,15 @@ jobs:
             ~/ffmpeg_build/SVT-AV1
             ~/svtav1_installed.flag
           key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
+      
+      - name: Cache dav1d build
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/ffmpeg_build/dav1d_build
+            ~/ffmpeg_build/dav1d
+            ~/dav1d_installed.flag
+          key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
 
       - name: Update packages for Ubuntu
         if: matrix.os == 'ubuntu-latest'
