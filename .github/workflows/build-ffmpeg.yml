@@ -42,6 +42,11 @@ jobs:
           cd ~/ffmpeg_sources
           git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
 
+      - name: Clone VMAF source
+        run: |
+          cd ~/ffmpeg_sources
+          git clone --depth 1 --branch libvmaf_v3 https://github.com/Netflix/vmaf.git
+
       - name: Get AOM commit hash
         id: aom_hash
         run: |
@@ -233,26 +238,18 @@ jobs:
       
           touch "$HOME/libdav1d_installed.flag"
       
-      - name: Build VMAF from source
+      - name: Build libvmaf from source (Ubuntu only)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          VMAF_VERSION="v3.0.0"
-          VMAF_TARBALL="v3.0.0.tar.gz"
-          VMAF_SRC_ROOT="$HOME/ffmpeg_sources"
-          VMAF_SRC_DIR="$VMAF_SRC_ROOT/vmaf-3.0.0"
+          VMAF_SRC_DIR="$HOME/ffmpeg_sources/vmaf/libvmaf"
           VMAF_BUILD_DIR="$HOME/ffmpeg_build/vmaf_build"
           VMAF_INSTALL_DIR="$HOME/ffmpeg_build/vmaf"
       
-          if [ -f "$HOME/vmaf_installed.flag" ]; then
-            echo "VMAF already installed from cache."
+          if [ -f "$HOME/libvmaf_installed.flag" ]; then
+            echo "libvmaf already installed from cache."
             exit 0
           fi
       
-          wget -q "https://github.com/Netflix/vmaf/archive/$VMAF_TARBALL"
-          tar xf "$VMAF_TARBALL"
-      
-          ls -lhR  
-
           mkdir -p "$VMAF_BUILD_DIR"
           cd "$VMAF_BUILD_DIR"
       
@@ -262,17 +259,18 @@ jobs:
           meson setup \
             --buildtype=release \
             --default-library=static \
+            --prefix="$VMAF_INSTALL_DIR" \
+            --libdir="$VMAF_INSTALL_DIR/lib" \
+            --bindir="$HOME/bin" \
             -Denable_tests=false \
             -Denable_docs=false \
-            --prefix="$VMAF_INSTALL_DIR" \
-            --bindir="$HOME/bin" \
-            --libdir="$VMAF_INSTALL_DIR/lib" \
-            "$VMAF_SRC_DIR/libvmaf"
+            "$VMAF_SRC_DIR"
       
           ninja
           ninja install
       
           touch "$HOME/libvmaf_installed.flag"
+      
       
         
       - name: Build FFmpeg
