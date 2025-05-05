@@ -23,6 +23,15 @@ jobs:
           repository: FFmpeg/FFmpeg
           path: ffmpeg-source
 
+      - name: Cache FFmpeg source
+        uses: actions/cache@v3
+        with:
+          path: ~/ffmpeg-source
+          key: ffmpeg-source-${{ runner.os }}-${{ hashFiles('**/ffmpeg-source/**') }}
+          restore-keys: |
+            ffmpeg-source-${{ runner.os }}-
+            ffmpeg-source-
+
       - name: Debug directory
         run: |
           echo "Directory is:"
@@ -38,7 +47,7 @@ jobs:
       - name: Install base dependencies for Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: |
-            sudo apt-get install -y autoconf \
+            sudo apt-get install -y --force autoconf \
             automake \
             build-essential \
             cmake \
