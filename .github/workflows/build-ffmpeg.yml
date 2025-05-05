@@ -23,6 +23,9 @@ jobs:
           repository: FFmpeg/FFmpeg
           path: ffmpeg-source
 
+      - name: Create ffmpeg_sources directory
+        run: mkdir -p ~/ffmpeg_sources
+    
       - name: Clone AOM source
         run: |
           cd ~/ffmpeg_sources
