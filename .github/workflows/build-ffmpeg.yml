@@ -108,7 +108,6 @@ jobs:
             PATH="$HOME/bin:$PATH" make
             if [ $? -eq 0 ]; then
               make install
-              echo "export PKG_CONFIG_PATH=$HOME/ffmpeg_build/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
               touch ~/aom_installed.flag
             else
               echo "aom installation failed, continuing without it."
@@ -152,6 +151,8 @@ jobs:
       - name: Build FFmpeg
         run: |
           cd ffmpeg-source
+
+          export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:$PKG_CONFIG_PATH"
 
           AOM_FLAG=""
           if [ -f ~/aom_installed.flag ]; then
