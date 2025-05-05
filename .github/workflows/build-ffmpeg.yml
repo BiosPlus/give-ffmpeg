@@ -40,7 +40,7 @@ jobs:
           path: |
             ~/ffmpeg_build
             ~/aom_installed.flag
-          key: aom-${{ runner.os }}-${{ steps.aom_hash.outputs.hash }}
+          key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
 
       - name: Debug directory
         run: |
