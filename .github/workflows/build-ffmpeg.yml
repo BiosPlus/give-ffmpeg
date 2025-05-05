@@ -217,7 +217,7 @@ jobs:
             exit 0
           fi
       
-          git -C "$DAV1D_SRC_DIR" pull 2>/dev/null || git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
+          # git -C "$DAV1D_SRC_DIR" pull 2>/dev/null || git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
       
           mkdir -p "$DAV1D_BUILD_DIR"
           cd "$DAV1D_BUILD_DIR"
@@ -238,7 +238,7 @@ jobs:
       
           touch "$HOME/libdav1d_installed.flag"
       
-      - name: Build libvmaf from source (Ubuntu only)
+      - name: Build VMAF from source
         if: matrix.os == 'ubuntu-latest'
         run: |
           VMAF_SRC_DIR="$HOME/ffmpeg_sources/vmaf/libvmaf"
