@@ -54,6 +54,7 @@ jobs:
         with:
           path: |
             ~/ffmpeg_build/aom_build
+            ~/ffmpeg_build/aom
             ~/aom_installed.flag
           key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
   
@@ -61,7 +62,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ~/ffmpeg_build/svtav1_build
+            ~/ffmpeg_build/SVT-AV1_build
+            ~/ffmpeg_build/SVT-AV1
             ~/svtav1_installed.flag
           key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
 
@@ -147,21 +149,32 @@ jobs:
       
           touch "$HOME/aom_installed.flag"
       
-      - name: Install SVT-AV1 for Ubuntu
+      - name: Build SVT-AV1 from source
         if: matrix.os == 'ubuntu-latest'
         run: |
-            if [ -f ~/svtav1_installed.flag ]; then
-              echo "SVT-AV1 already installed from cache."
-              exit 0
-            fi
+          SVT_SRC_DIR="$HOME/ffmpeg_sources/SVT-AV1"
+          SVT_BUILD_DIR="$HOME/ffmpeg_build/SVT-AV1_build"
+          SVT_INSTALL_DIR="$HOME/ffmpeg_build/SVT-AV1"
 
-            cd ~/ffmpeg_sources/SVT-AV1
-            mkdir -p build
-            cd build
-            PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DCMAKE_BUILD_TYPE=Release -DBUILD_DEC=OFF -DBUILD_SHARED_LIBS=OFF ..
-            PATH="$HOME/bin:$PATH" make -j$(nproc)
-            make install
-            touch ~/svtav1_installed.flag
+          if [ -f "$HOME/svtav1_installed.flag" ]; then
+            echo "SVT-AV1 already installed from cache."
+            exit 0
+          fi
+
+          mkdir -p "$SVT_BUILD_DIR"
+          cd "$SVT_BUILD_DIR"
+
+          PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
+            -DCMAKE_INSTALL_PREFIX="$SVT_INSTALL_DIR" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_DEC=OFF \
+            -DBUILD_SHARED_LIBS=OFF \
+            "$SVT_SRC_DIR"
+
+          PATH="$HOME/bin:$PATH" make -j"$(nproc)"
+          make install
+
+          touch "$HOME/svtav1_installed.flag"
 
       - name: Install libdav1d for Ubuntu
         if: matrix.os == 'ubuntu-latest'
@@ -185,7 +198,7 @@ jobs:
         run: |
           cd ffmpeg-source
 
-          export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:$PKG_CONFIG_PATH"
+          export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:$HOME/ffmpeg_build/SVT-AV1/lib/pkgconfig:$HOME/ffmpeg_build/aom/lib/pkgconfig:$PKG_CONFIG_PATH"
 
           AOM_FLAG=""
           if [ -f ~/aom_installed.flag ]; then
