@@ -294,6 +294,11 @@ jobs:
             SVTAV1_FLAG="--enable-libsvtav1"
           fi
 
+          VMAF_FLAG=""
+          if [ -f "$HOME/libvmaf_installed.flag" ]; then
+            VMAF_FLAG="--enable-libvmaf"
+          fi
+
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
           --arch=${{ matrix.arch }} \
           --target-os=linux \
