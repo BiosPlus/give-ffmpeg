@@ -235,6 +235,45 @@ jobs:
           ninja install
       
           touch "$HOME/libdav1d_installed.flag"
+      
+      - name: Build VMAF from source (Ubuntu only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          VMAF_VERSION="v3.0.0"
+          VMAF_TARBALL="v3.0.0.tar.gz"
+          VMAF_SRC_DIR="$HOME/ffmpeg_sources/vmaf-3.0.0"
+          VMAF_BUILD_DIR="$HOME/ffmpeg_build/vmaf_build"
+          VMAF_INSTALL_DIR="$HOME/ffmpeg_build/vmaf"
+      
+          if [ -f "$HOME/vmaf_installed.flag" ]; then
+            echo "VMAF already installed from cache."
+            exit 0
+          fi
+      
+          wget -q "https://github.com/Netflix/vmaf/archive/$VMAF_TARBALL"
+          tar xf "$VMAF_TARBALL"
+      
+          mkdir -p "$VMAF_BUILD_DIR"
+          cd "$VMAF_BUILD_DIR"
+      
+          export CFLAGS="-O3 -mtune=generic"
+          export CXXFLAGS="-O3 -mtune=generic"
+      
+          meson setup \
+            --buildtype=release \
+            --default-library=static \
+            -Denable_tests=false \
+            -Denable_docs=false \
+            --prefix="$VMAF_INSTALL_DIR" \
+            --bindir="$HOME/bin" \
+            --libdir="$VMAF_INSTALL_DIR/lib" \
+            "$VMAF_SRC_DIR/vmaf"
+      
+          ninja
+          ninja install
+      
+          touch "$HOME/libvmaf_installed.flag"
+      
         
       - name: Build FFmpeg
         run: |
