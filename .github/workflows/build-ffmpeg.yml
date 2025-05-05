@@ -25,7 +25,10 @@ jobs:
           path: ffmpeg-source
 
       - name: Create ffmpeg_sources directory
-        run: mkdir -p $HOME/ffmpeg_sources
+        run: |
+          mkdir -p $HOME/ffmpeg_sources
+          mkdir -p $HOME/ffmpeg_build
+
     
       - name: Clone AOM source
         run: |
@@ -78,6 +81,7 @@ jobs:
           echo "FFMPEG_BUILD: $HOME/ffmpeg_build"
           echo "FFMPEG_SOURCES: $HOME/ffmpeg_sources"
           pwd $HOME
+          ls -lhR $HOME/ffmpeg_build/
 
       - name: Cache AOM build
         uses: actions/cache@v4
@@ -345,3 +349,12 @@ jobs:
           --samples=fate-suite/
           make -j$(nproc)
           make install
+
+      - name: Test pathing
+        run: |
+          echo "PATH: $PATH"
+          echo "HOME: $HOME"
+          echo "FFMPEG_BUILD: $HOME/ffmpeg_build"
+          echo "FFMPEG_SOURCES: $HOME/ffmpeg_sources"
+          pwd $HOME
+          ls -lhR $HOME/ffmpeg_build/
