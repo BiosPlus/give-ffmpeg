@@ -76,12 +76,28 @@ jobs:
 
       - name: Test pathing
         run: |
-          echo "PATH: $PATH"
-          echo "HOME: $HOME"
-          echo "FFMPEG_BUILD: $HOME/ffmpeg_build"
-          echo "FFMPEG_SOURCES: $HOME/ffmpeg_sources"
-          pwd $HOME
-          ls -lhR $HOME/ffmpeg_build/
+            paths=(
+              "$HOME/ffmpeg_build/aom_build"
+              "$HOME/ffmpeg_build/aom"
+              "$HOME/aom_installed.flag"
+              "$HOME/ffmpeg_build/SVT-AV1_build"
+              "$HOME/ffmpeg_build/SVT-AV1"
+              "$HOME/svtav1_installed.flag"
+              "$HOME/ffmpeg_build/dav1d_build"
+              "$HOME/ffmpeg_build/dav1d"
+              "$HOME/dav1d_installed.flag"
+              "$HOME/ffmpeg_build/vmaf_build"
+              "$HOME/ffmpeg_build/vmaf"
+              "$HOME/libvmaf_installed.flag"
+            )
+
+            for path in "${paths[@]}"; do
+              if [ -e "$path" ]; then
+              echo "Exists: $path"
+              else
+              echo "Missing: $path"
+              fi
+            done
 
       - name: Cache AOM build
         uses: actions/cache@v4
