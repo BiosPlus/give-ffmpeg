@@ -37,6 +37,11 @@ jobs:
           cd ~/ffmpeg_sources
           git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
 
+      - name: Clone dav1d source
+        run: |
+          cd ~/ffmpeg_sources
+          git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
+
       - name: Get AOM commit hash
         id: aom_hash
         run: |
@@ -180,17 +185,39 @@ jobs:
 
           touch "$HOME/svtav1_installed.flag"
 
-      - name: Install libdav1d for Ubuntu
+      - name: Build dav1d from source
         if: matrix.os == 'ubuntu-latest'
         run: |
-            set +e
-            sudo apt-get install libdav1d-dev
-            if [ $? -eq 0 ]; then
-              cd ffmpeg-source
-              touch ~/libdav1d_installed.flag
-            else
-              echo "libdav1d installation failed, continuing without it."
-            fi
+          DAV1D_SRC_DIR="$HOME/ffmpeg_sources/dav1d"
+          DAV1D_BUILD_DIR="$HOME/ffmpeg_build/dav1d_build"
+          DAV1D_INSTALL_DIR="$HOME/ffmpeg_build/dav1d"
+      
+          if [ -f "$HOME/libdav1d_installed.flag" ]; then
+            echo "dav1d already installed from cache."
+            exit 0
+          fi
+      
+          mkdir -p "$HOME/ffmpeg_sources"
+          cd "$HOME/ffmpeg_sources"
+      
+          git -C "$DAV1D_SRC_DIR" pull 2>/dev/null || git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
+      
+          mkdir -p "$DAV1D_BUILD_DIR"
+          cd "$DAV1D_BUILD_DIR"
+      
+          meson setup \
+            --default-library=static \
+            --prefix="$DAV1D_INSTALL_DIR" \
+            --libdir="$DAV1D_INSTALL_DIR/lib" \
+            -Denable_tools=false \
+            -Denable_tests=false \
+            ..
+      
+          ninja
+          ninja install
+      
+          touch "$HOME/libdav1d_installed.flag"
+        
 
       - name: Build FFmpeg
         run: |
