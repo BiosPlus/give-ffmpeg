@@ -293,17 +293,17 @@ jobs:
           export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:$HOME/ffmpeg_build/dav1d/lib/pkgconfig:$HOME/ffmpeg_build/vmaf/lib/pkgconfig:$HOME/ffmpeg_build/SVT-AV1/lib/pkgconfig:$HOME/ffmpeg_build/aom/lib/pkgconfig:$PKG_CONFIG_PATH"
 
           AOM_FLAG=""
-          if [ -f ~/aom_installed.flag ]; then
+          if [ -f "$HOME/aom_installed.flag" ]; then
             AOM_FLAG="--enable-libaom"
           fi
 
           DAV1D_FLAG=""
-          if [ -f ~/libdav1d_installed.flag ]; then
+          if [ -f "$HOME/dav1d_installed.flag" ]; then
             DAV1D_FLAG="--enable-libdav1d"
           fi
 
           SVTAV1_FLAG=""
-          if [ -f ~/svtav1_installed.flag ]; then
+          if [ -f "$HOME/svtav1_installed.flag" ]; then
             SVTAV1_FLAG="--enable-libsvtav1"
           fi
 
