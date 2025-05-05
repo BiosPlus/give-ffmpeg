@@ -270,9 +270,7 @@ jobs:
           ninja install
       
           touch "$HOME/libvmaf_installed.flag"
-      
-      
-        
+             
       - name: Build FFmpeg
         run: |
           cd ffmpeg-source
