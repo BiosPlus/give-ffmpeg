@@ -212,9 +212,6 @@ jobs:
             exit 0
           fi
       
-          mkdir -p "$HOME/ffmpeg_sources"
-          cd "$HOME/ffmpeg_sources"
-      
           git -C "$DAV1D_SRC_DIR" pull 2>/dev/null || git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
       
           mkdir -p "$DAV1D_BUILD_DIR"
