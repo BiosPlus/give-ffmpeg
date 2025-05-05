@@ -219,7 +219,10 @@ jobs:
       
           mkdir -p "$DAV1D_BUILD_DIR"
           cd "$DAV1D_BUILD_DIR"
-      
+
+          export CFLAGS="-O3 -mtune=generic"
+          export CXXFLAGS="-O3 -mtune=generic"
+
           meson setup \
             --default-library=static \
             --prefix="$DAV1D_INSTALL_DIR" \
