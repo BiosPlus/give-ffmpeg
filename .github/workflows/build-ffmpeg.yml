@@ -71,6 +71,14 @@ jobs:
           cd $HOME/ffmpeg_sources/vmaf
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
+      - name: Test pathing
+        run: |
+          echo "PATH: $PATH"
+          echo "HOME: $HOME"
+          echo "FFMPEG_BUILD: $HOME/ffmpeg_build"
+          echo "FFMPEG_SOURCES: $HOME/ffmpeg_sources"
+          pwd $HOME
+              
       - name: Cache AOM build
         uses: actions/cache@v3
         with:
