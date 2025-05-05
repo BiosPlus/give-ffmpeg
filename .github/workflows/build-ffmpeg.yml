@@ -126,7 +126,7 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: |
-            sudo apt-get install -y autoconf \
+            sudo apt-get install -qq -y autoconf \
             automake \
             build-essential \
             cmake \
@@ -153,27 +153,27 @@ jobs:
 
       - name: Install nasm for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install nasm
+        run: sudo apt-get install -qq nasm
 
       - name: Install x264 for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install libx264-dev
+        run: sudo apt-get install -qq libx264-dev
 
       - name: Install x265 for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install libx265-dev libnuma-dev
+        run: sudo apt-get install -qq libx265-dev libnuma-dev
 
       - name: Install libvpx for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install libvpx-dev
+        run: sudo apt-get install -qq libvpx-dev
 
       - name: Install libfdk-aac for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install libfdk-aac-dev
+        run: sudo apt-get install -qq libfdk-aac-dev
 
       - name: Install libopus for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install libopus-dev
+        run: sudo apt-get install -qq libopus-dev
 
       - name: Build AOM from source
         if: matrix.os == 'ubuntu-latest'
