@@ -307,6 +307,7 @@ jobs:
           ${AOM_FLAG} \
           ${DAV1D_FLAG} \
           ${SVTAV1_FLAG} \
+          ${VMAF_FLAG} \
           --enable-libass \
           --enable-libfdk-aac \
           --enable-libfreetype \
