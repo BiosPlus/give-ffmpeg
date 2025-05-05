@@ -238,7 +238,8 @@ jobs:
         run: |
           VMAF_VERSION="v3.0.0"
           VMAF_TARBALL="v3.0.0.tar.gz"
-          VMAF_SRC_DIR="$HOME/ffmpeg_sources/vmaf-3.0.0"
+          VMAF_SRC_ROOT="$HOME/ffmpeg_sources"
+          VMAF_SRC_DIR="$VMAF_SRC_ROOT/vmaf-3.0.0"
           VMAF_BUILD_DIR="$HOME/ffmpeg_build/vmaf_build"
           VMAF_INSTALL_DIR="$HOME/ffmpeg_build/vmaf"
       
@@ -264,7 +265,7 @@ jobs:
             --prefix="$VMAF_INSTALL_DIR" \
             --bindir="$HOME/bin" \
             --libdir="$VMAF_INSTALL_DIR/lib" \
-            "$VMAF_SRC_DIR/vmaf"
+            "$VMAF_SRC_DIR/libvmaf"
       
           ninja
           ninja install
