@@ -139,7 +139,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libfdk-aac-dev
 
-      - name: Install libopus for Ubuntu
+      - name: Install libopus for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libopus-dev
 
