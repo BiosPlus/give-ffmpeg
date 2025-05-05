@@ -140,6 +140,8 @@ jobs:
       
           PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
             -DCMAKE_INSTALL_PREFIX="$AOM_INSTALL_DIR" \
+            -DCMAKE_C_FLAGS_RELEASE="-O3 -mtune=generic" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -mtune=generic" \
             -DENABLE_TESTS=OFF \
             -DENABLE_NASM=on \
             "$AOM_SRC_DIR"
@@ -167,6 +169,8 @@ jobs:
           PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
             -DCMAKE_INSTALL_PREFIX="$SVT_INSTALL_DIR" \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_FLAGS_RELEASE="-O3 -mtune=generic" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -mtune=generic" \
             -DBUILD_DEC=OFF \
             -DBUILD_SHARED_LIBS=OFF \
             "$SVT_SRC_DIR"
