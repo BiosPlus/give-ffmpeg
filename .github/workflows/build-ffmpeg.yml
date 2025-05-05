@@ -25,87 +25,87 @@ jobs:
           path: ffmpeg-source
 
       - name: Create ffmpeg_sources directory
-        run: mkdir -p ~/ffmpeg_sources
+        run: mkdir -p $HOME/ffmpeg_sources
     
       - name: Clone AOM source
         run: |
-          cd ~/ffmpeg_sources
+          cd $HOME/ffmpeg_sources
           git clone --depth 1 https://aomedia.googlesource.com/aom
       
       - name: Clone SVT-AV1 source
         run: |
-          cd ~/ffmpeg_sources
+          cd $HOME/ffmpeg_sources
           git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
 
       - name: Clone dav1d source
         run: |
-          cd ~/ffmpeg_sources
+          cd $HOME/ffmpeg_sources
           git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
 
       - name: Clone VMAF source
         run: |
-          cd ~/ffmpeg_sources
+          cd $HOME/ffmpeg_sources
           git clone --depth 1 --branch libvmaf_v3 https://github.com/Netflix/vmaf.git
 
       - name: Get AOM commit hash
         id: aom_hash
         run: |
-          cd ~/ffmpeg_sources/aom
+          cd $HOME/ffmpeg_sources/aom
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       
       - name: Get SVT-AV1 commit hash
         id: svtav1_hash
         run: |
-          cd ~/ffmpeg_sources/SVT-AV1
+          cd $HOME/ffmpeg_sources/SVT-AV1
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Get dav1d commit hash
         id: dav1d_hash
         run: |
-          cd ~/ffmpeg_sources/dav1d
+          cd $HOME/ffmpeg_sources/dav1d
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Get VMAF commit hash
         id: vmaf_hash
         run: |
-          cd ~/ffmpeg_sources/vmaf
+          cd $HOME/ffmpeg_sources/vmaf
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Cache AOM build
         uses: actions/cache@v3
         with:
           path: |
-            ~/ffmpeg_build/aom_build
-            ~/ffmpeg_build/aom
-            ~/aom_installed.flag
+            $HOME/ffmpeg_build/aom_build
+            $HOME/ffmpeg_build/aom
+            $HOME/aom_installed.flag
           key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
   
       - name: Cache SVT-AV1 build
         uses: actions/cache@v3
         with:
           path: |
-            ~/ffmpeg_build/SVT-AV1_build
-            ~/ffmpeg_build/SVT-AV1
-            ~/svtav1_installed.flag
+            $HOME/ffmpeg_build/SVT-AV1_build
+            $HOME/ffmpeg_build/SVT-AV1
+            $HOME/svtav1_installed.flag
           key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
       
       - name: Cache dav1d build
         uses: actions/cache@v3
         with:
           path: |
-            ~/ffmpeg_build/dav1d_build
-            ~/ffmpeg_build/dav1d
-            ~/dav1d_installed.flag
-          key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
+            $HOME/ffmpeg_build/dav1d_build
+            $HOME/ffmpeg_build/dav1d
+            $HOME/dav1d_installed.flag
+          key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
       - name: Cache VMAF build
         uses: actions/cache@v3
         with:
           path: |
-            ~/ffmpeg_build/vmaf_build
-            ~/ffmpeg_build/vmaf
-            ~/libvmaf_installed.flag
-          key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
+            $HOME/ffmpeg_build/vmaf_build
+            $HOME/ffmpeg_build/vmaf
+            $HOME/libvmaf_installed.flag
+          key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.vmaf_hash.outputs.hash }}
 
       - name: Update packages for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
