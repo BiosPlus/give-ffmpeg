@@ -227,7 +227,7 @@ jobs:
           DAV1D_BUILD_DIR="$HOME/ffmpeg_build/dav1d_build"
           DAV1D_INSTALL_DIR="$HOME/ffmpeg_build/dav1d"
       
-          if [ -f "$HOME/libdav1d_installed.flag" ]; then
+          if [ -f "$HOME/dav1d_installed.flag" ]; then
             echo "dav1d already installed from cache."
             exit 0
           fi
@@ -251,7 +251,7 @@ jobs:
           ninja
           ninja install
       
-          touch "$HOME/libdav1d_installed.flag"
+          touch "$HOME/dav1d_installed.flag"
       
       - name: Build VMAF from source
         if: matrix.os == 'ubuntu-latest'
