@@ -107,11 +107,11 @@ jobs:
             ~/libvmaf_installed.flag
           key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
-      - name: Update packages for Ubuntu
+      - name: Update packages for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update
 
-      - name: Install base dependencies for Ubuntu
+      - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: |
             sudo apt-get install -y autoconf \
@@ -139,23 +139,23 @@ jobs:
             yasm \
             zlib1g-dev
 
-      - name: Install nasm for Ubuntu
+      - name: Install nasm for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install nasm
 
-      - name: Install x264 for Ubuntu
+      - name: Install x264 for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libx264-dev
 
-      - name: Install x265 for Ubuntu
+      - name: Install x265 for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libx265-dev libnuma-dev
 
-      - name: Install libvpx for Ubuntu
+      - name: Install libvpx for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libvpx-dev
 
-      - name: Install libfdk-aac for Ubuntu
+      - name: Install libfdk-aac for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install libfdk-aac-dev
 
