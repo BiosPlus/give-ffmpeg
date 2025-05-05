@@ -63,7 +63,13 @@ jobs:
         id: dav1d_hash
         run: |
           cd ~/ffmpeg_sources/dav1d
-          echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"    
+          echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Get VMAF commit hash
+        id: vmaf_hash
+        run: |
+          cd ~/ffmpeg_sources/vmaf
+          echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Cache AOM build
         uses: actions/cache@v3
@@ -91,6 +97,15 @@ jobs:
             ~/ffmpeg_build/dav1d
             ~/dav1d_installed.flag
           key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
+
+      - name: Cache VMAF build
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/ffmpeg_build/vmaf_build
+            ~/ffmpeg_build/vmaf
+            ~/libvmaf_installed.flag
+          key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
       - name: Update packages for Ubuntu
         if: matrix.os == 'ubuntu-latest'
