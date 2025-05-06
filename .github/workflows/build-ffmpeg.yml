@@ -97,6 +97,102 @@ jobs:
 
           touch "$HOME/svtav1_installed.flag"
 
+  dependancy-dav1d:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        arch: [x86_64]
+        # Other arch: aarch64, arm, riscv, ppc, s390
+    steps:
+      - name: Create ffmpeg_sources directory
+        run: |
+          mkdir -p $HOME/ffmpeg_sources
+          mkdir -p $HOME/ffmpeg_build 
+          
+      - name: Clone dav1d source
+        run: |
+          cd $HOME/ffmpeg_sources
+          git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
+
+      - name: Get dav1d commit hash
+        id: dav1d_hash
+        run: |
+          cd $HOME/ffmpeg_sources/dav1d
+          echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          
+      - name: Cache dav1d build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/ffmpeg_build/dav1d_build
+            ~/ffmpeg_build/dav1d
+            ~/dav1d_installed.flag
+          key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
+
+      - name: Install base dependencies for Ubuntu (APT)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+            sudo apt-get install -qq -y autoconf \
+            automake \
+            build-essential \
+            cmake \
+            git-core \
+            libass-dev \
+            libfreetype6-dev \
+            libgnutls28-dev \
+            libmp3lame-dev \
+            libsdl2-dev \
+            libtool \
+            libva-dev \
+            libvdpau-dev \
+            libvorbis-dev \
+            libxcb1-dev \
+            libxcb-shm0-dev \
+            libxcb-xfixes0-dev \
+            meson \
+            nasm \
+            ninja-build \
+            pkg-config \
+            texinfo \
+            wget \
+            yasm \
+            zlib1g-dev
+
+      - name: Build dav1d from source
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          DAV1D_SRC_DIR="$HOME/ffmpeg_sources/dav1d"
+          DAV1D_BUILD_DIR="$HOME/ffmpeg_build/dav1d_build"
+          DAV1D_INSTALL_DIR="$HOME/ffmpeg_build/dav1d"
+      
+          if [ -f "$HOME/dav1d_installed.flag" ]; then
+            echo "dav1d already installed from cache."
+            exit 0
+          fi
+      
+          # git -C "$DAV1D_SRC_DIR" pull 2>/dev/null || git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
+      
+          mkdir -p "$DAV1D_BUILD_DIR"
+          cd "$DAV1D_BUILD_DIR"
+
+          export CFLAGS="-O3 -mtune=generic"
+          export CXXFLAGS="-O3 -mtune=generic"
+
+          meson setup \
+            --default-library=static \
+            --prefix="$DAV1D_INSTALL_DIR" \
+            --libdir="$DAV1D_INSTALL_DIR/lib" \
+            -Denable_tools=false \
+            -Denable_tests=false \
+            "$DAV1D_SRC_DIR"
+      
+          ninja
+          ninja install
+      
+          touch "$HOME/dav1d_installed.flag"
+
   dependancy-aom:
     runs-on: ubuntu-latest
     strategy:
@@ -195,8 +291,9 @@ jobs:
     needs: 
       - dependancy-svtav1
       - dependancy-aom
+      - dependancy-dav1d
+
     strategy:
-    
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
@@ -351,39 +448,6 @@ jobs:
       - name: Install libopus for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq libopus-dev
-
-      - name: Build dav1d from source
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          DAV1D_SRC_DIR="$HOME/ffmpeg_sources/dav1d"
-          DAV1D_BUILD_DIR="$HOME/ffmpeg_build/dav1d_build"
-          DAV1D_INSTALL_DIR="$HOME/ffmpeg_build/dav1d"
-      
-          if [ -f "$HOME/dav1d_installed.flag" ]; then
-            echo "dav1d already installed from cache."
-            exit 0
-          fi
-      
-          # git -C "$DAV1D_SRC_DIR" pull 2>/dev/null || git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
-      
-          mkdir -p "$DAV1D_BUILD_DIR"
-          cd "$DAV1D_BUILD_DIR"
-
-          export CFLAGS="-O3 -mtune=generic"
-          export CXXFLAGS="-O3 -mtune=generic"
-
-          meson setup \
-            --default-library=static \
-            --prefix="$DAV1D_INSTALL_DIR" \
-            --libdir="$DAV1D_INSTALL_DIR/lib" \
-            -Denable_tools=false \
-            -Denable_tests=false \
-            "$DAV1D_SRC_DIR"
-      
-          ninja
-          ninja install
-      
-          touch "$HOME/dav1d_installed.flag"
       
       - name: Build VMAF from source
         if: matrix.os == 'ubuntu-latest'
