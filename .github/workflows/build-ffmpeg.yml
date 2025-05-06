@@ -73,32 +73,6 @@ jobs:
           cd $HOME/ffmpeg_sources/vmaf
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Test pathing
-        run: |
-            paths=(
-              "$HOME/ffmpeg_build/aom_build"
-              "$HOME/ffmpeg_build/aom"
-              "$HOME/aom_installed.flag"
-              "$HOME/ffmpeg_build/SVT-AV1_build"
-              "$HOME/ffmpeg_build/SVT-AV1"
-              "$HOME/svtav1_installed.flag"
-              "$HOME/ffmpeg_build/dav1d_build"
-              "$HOME/ffmpeg_build/dav1d"
-              "$HOME/dav1d_installed.flag"
-              "$HOME/ffmpeg_build/vmaf_build"
-              "$HOME/ffmpeg_build/vmaf"
-              "$HOME/libvmaf_installed.flag"
-            )
-
-            for path in "${paths[@]}"; do
-              if [ -e "$path" ]; then
-              echo "Exists: $path"
-              else
-              echo "Missing: $path"
-              fi
-            done
-
-
 # These cache steps (and anything that uses the with: path: option) only support ~/ paths, not $HOME/ or $GITHUB_WORKSPACE/. Total fucking jank.
       - name: Cache AOM build
         uses: actions/cache@v4
@@ -366,28 +340,3 @@ jobs:
           --samples=fate-suite/
           make -j$(nproc)
           make install
-
-      - name: Test pathing
-        run: |
-            paths=(
-              "$HOME/ffmpeg_build/aom_build"
-              "$HOME/ffmpeg_build/aom"
-              "$HOME/aom_installed.flag"
-              "$HOME/ffmpeg_build/SVT-AV1_build"
-              "$HOME/ffmpeg_build/SVT-AV1"
-              "$HOME/svtav1_installed.flag"
-              "$HOME/ffmpeg_build/dav1d_build"
-              "$HOME/ffmpeg_build/dav1d"
-              "$HOME/dav1d_installed.flag"
-              "$HOME/ffmpeg_build/vmaf_build"
-              "$HOME/ffmpeg_build/vmaf"
-              "$HOME/libvmaf_installed.flag"
-            )
-
-            for path in "${paths[@]}"; do
-              if [ -e "$path" ]; then
-              echo "Exists: $path"
-              else
-              echo "Missing: $path"
-              fi
-            done
