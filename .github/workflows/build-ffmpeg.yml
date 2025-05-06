@@ -540,6 +540,15 @@ jobs:
             ~/libvmaf_installed.flag
           key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.vmaf_hash.outputs.hash }}
 
+      - name: Cache x264 build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/ffmpeg_build/x264_build
+            ~/ffmpeg_build/x264
+            ~/x264_installed.flag
+          key: x264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.x264_hash.outputs.hash }}
+
       - name: Update packages for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update
