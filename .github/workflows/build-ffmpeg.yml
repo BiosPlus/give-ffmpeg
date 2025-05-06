@@ -286,6 +286,102 @@ jobs:
       
           touch "$HOME/aom_installed.flag"
 
+  dependancy-vmaf:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        arch: [x86_64]
+        # Other arch: aarch64, arm, riscv, ppc, s390
+    steps:
+      - name: Create ffmpeg_sources directory
+        run: |
+          mkdir -p $HOME/ffmpeg_sources
+          mkdir -p $HOME/ffmpeg_build
+
+      - name: Clone VMAF source
+        run: |
+          cd $HOME/ffmpeg_sources
+          git clone --depth 1 --branch libvmaf_v3 https://github.com/Netflix/vmaf.git
+
+      - name: Get dav1d commit hash
+        id: dav1d_hash
+        run: |
+          cd $HOME/ffmpeg_sources/dav1d
+          echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache dav1d build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/ffmpeg_build/dav1d_build
+            ~/ffmpeg_build/dav1d
+            ~/dav1d_installed.flag
+          key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
+
+      - name: Install base dependencies for Ubuntu (APT)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+            sudo apt-get install -qq -y autoconf \
+            automake \
+            build-essential \
+            cmake \
+            git-core \
+            libass-dev \
+            libfreetype6-dev \
+            libgnutls28-dev \
+            libmp3lame-dev \
+            libsdl2-dev \
+            libtool \
+            libva-dev \
+            libvdpau-dev \
+            libvorbis-dev \
+            libxcb1-dev \
+            libxcb-shm0-dev \
+            libxcb-xfixes0-dev \
+            meson \
+            nasm \
+            ninja-build \
+            pkg-config \
+            texinfo \
+            wget \
+            yasm \
+            zlib1g-dev
+
+      - name: Build VMAF from source
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          VMAF_SRC_DIR="$HOME/ffmpeg_sources/vmaf/libvmaf"
+          VMAF_BUILD_DIR="$HOME/ffmpeg_build/vmaf_build"
+          VMAF_INSTALL_DIR="$HOME/ffmpeg_build/vmaf"
+      
+          if [ -f "$HOME/libvmaf_installed.flag" ]; then
+            echo "libvmaf already installed from cache."
+            exit 0
+          fi
+      
+          mkdir -p "$VMAF_BUILD_DIR"
+          cd "$VMAF_BUILD_DIR"
+      
+          export CFLAGS="-O3 -mtune=generic"
+          export CXXFLAGS="-O3 -mtune=generic"
+      
+          meson setup \
+            --buildtype=release \
+            --default-library=static \
+            --prefix="$VMAF_INSTALL_DIR" \
+            --libdir="$VMAF_INSTALL_DIR/lib" \
+            --bindir="$HOME/bin" \
+            -Denable_tests=false \
+            -Denable_docs=false \
+            "$VMAF_SRC_DIR"
+      
+          ninja
+          ninja install
+      
+          touch "$HOME/libvmaf_installed.flag"
+
   build-ffmpeg:
     runs-on: ${{ matrix.os }}
     needs: 
@@ -448,39 +544,6 @@ jobs:
       - name: Install libopus for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq libopus-dev
-      
-      - name: Build VMAF from source
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          VMAF_SRC_DIR="$HOME/ffmpeg_sources/vmaf/libvmaf"
-          VMAF_BUILD_DIR="$HOME/ffmpeg_build/vmaf_build"
-          VMAF_INSTALL_DIR="$HOME/ffmpeg_build/vmaf"
-      
-          if [ -f "$HOME/libvmaf_installed.flag" ]; then
-            echo "libvmaf already installed from cache."
-            exit 0
-          fi
-      
-          mkdir -p "$VMAF_BUILD_DIR"
-          cd "$VMAF_BUILD_DIR"
-      
-          export CFLAGS="-O3 -mtune=generic"
-          export CXXFLAGS="-O3 -mtune=generic"
-      
-          meson setup \
-            --buildtype=release \
-            --default-library=static \
-            --prefix="$VMAF_INSTALL_DIR" \
-            --libdir="$VMAF_INSTALL_DIR/lib" \
-            --bindir="$HOME/bin" \
-            -Denable_tests=false \
-            -Denable_docs=false \
-            "$VMAF_SRC_DIR"
-      
-          ninja
-          ninja install
-      
-          touch "$HOME/libvmaf_installed.flag"
              
       - name: Build FFmpeg
         run: |
