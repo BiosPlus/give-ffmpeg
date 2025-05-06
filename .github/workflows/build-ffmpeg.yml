@@ -27,7 +27,7 @@ jobs:
       - name: Get SVT-AV1 commit hash
         id: svtav1_hash
         run: |
-          cd $HOME/ffmpeg_sources/aom
+          cd $HOME/ffmpeg_sources/SVT-AV1
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       
       - name: Cache SVT-AV1 build
