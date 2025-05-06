@@ -408,7 +408,7 @@ jobs:
           cd $HOME/ffmpeg_sources/x264
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       
-      - name: Cache AOM build
+      - name: Cache x264 build
         uses: actions/cache@v4
         with:
           path: |
