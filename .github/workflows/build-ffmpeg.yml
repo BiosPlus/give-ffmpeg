@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, ubuntu-24.04-arm]
+        os: [ubuntu-latest]
         arch: [x86_64]
         # Other arch: aarch64, arm, riscv, ppc, s390
 
@@ -107,7 +107,7 @@ jobs:
             ~/ffmpeg_build/aom_build
             ~/ffmpeg_build/aom
             ~/aom_installed.flag
-          key: aom-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
+          key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
   
       - name: Cache SVT-AV1 build
         uses: actions/cache@v4
@@ -116,7 +116,7 @@ jobs:
             ~/ffmpeg_build/SVT-AV1_build
             ~/ffmpeg_build/SVT-AV1
             ~/svtav1_installed.flag
-          key: svtav1-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
+          key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
       
       - name: Cache dav1d build
         uses: actions/cache@v4
@@ -125,7 +125,7 @@ jobs:
             ~/ffmpeg_build/dav1d_build
             ~/ffmpeg_build/dav1d
             ~/dav1d_installed.flag
-          key: dav1d-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
+          key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
       - name: Cache VMAF build
         uses: actions/cache@v4
@@ -134,16 +134,14 @@ jobs:
             ~/ffmpeg_build/vmaf_build
             ~/ffmpeg_build/vmaf
             ~/libvmaf_installed.flag
-          key: vmaf-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.vmaf_hash.outputs.hash }}
+          key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.vmaf_hash.outputs.hash }}
 
       - name: Update packages for Ubuntu (APT)
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update
 
       - name: Install base dependencies for Ubuntu (APT)
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: |
             sudo apt-get install -qq -y autoconf \
             automake \
@@ -171,38 +169,31 @@ jobs:
             zlib1g-dev
 
       - name: Install nasm for Ubuntu (APT)
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq nasm
 
       - name: Install x264 for Ubuntu (APT)
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq libx264-dev
 
       - name: Install x265 for Ubuntu (APT)
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq libx265-dev libnuma-dev
 
       - name: Install libvpx for Ubuntu (APT)
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq libvpx-dev
 
       - name: Install libfdk-aac for Ubuntu (APT)
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq libfdk-aac-dev
 
       - name: Install libopus for Ubuntu (APT)
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq libopus-dev
 
       - name: Build AOM from source
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: |
           AOM_SRC_DIR="$HOME/ffmpeg_sources/aom"
           AOM_BUILD_DIR="$HOME/ffmpeg_build/aom_build"
@@ -230,8 +221,7 @@ jobs:
           touch "$HOME/aom_installed.flag"
       
       - name: Build SVT-AV1 from source
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: |
           SVT_SRC_DIR="$HOME/ffmpeg_sources/SVT-AV1"
           SVT_BUILD_DIR="$HOME/ffmpeg_build/SVT-AV1_build"
@@ -260,8 +250,7 @@ jobs:
           touch "$HOME/svtav1_installed.flag"
 
       - name: Build dav1d from source
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: |
           DAV1D_SRC_DIR="$HOME/ffmpeg_sources/dav1d"
           DAV1D_BUILD_DIR="$HOME/ffmpeg_build/dav1d_build"
@@ -294,8 +283,7 @@ jobs:
           touch "$HOME/dav1d_installed.flag"
       
       - name: Build VMAF from source
-#        if: matrix.os == 'ubuntu-latest'
-
+        if: matrix.os == 'ubuntu-latest'
         run: |
           VMAF_SRC_DIR="$HOME/ffmpeg_sources/vmaf/libvmaf"
           VMAF_BUILD_DIR="$HOME/ffmpeg_build/vmaf_build"
