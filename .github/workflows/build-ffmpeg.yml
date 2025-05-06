@@ -382,6 +382,96 @@ jobs:
       
           touch "$HOME/libvmaf_installed.flag"
 
+  dependancy-x264:
+    runs-on: ubuntu-latest
+    strategy:
+    
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        arch: [x86_64]
+        # Other arch: aarch64, arm, riscv, ppc, s390
+    steps:
+      - name: Create ffmpeg_sources directory
+        run: |
+          mkdir -p $HOME/ffmpeg_sources
+          mkdir -p $HOME/ffmpeg_build
+      
+      - name: Clone x264 source
+        run: |
+          cd $HOME/ffmpeg_sources
+          git clone --depth 1 https://code.videolan.org/videolan/x264.git
+
+      - name: Get x264 commit hash
+        id: x264_hash
+        run: |
+          cd $HOME/ffmpeg_sources/x264
+          echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      
+      - name: Cache AOM build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/ffmpeg_build/x264_build
+            ~/ffmpeg_build/x264
+            ~/x264_installed.flag
+          key: x264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.x264_hash.outputs.hash }}
+
+      - name: Install base dependencies for Ubuntu (APT)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+            sudo apt-get install -qq -y autoconf \
+            automake \
+            build-essential \
+            cmake \
+            git-core \
+            libass-dev \
+            libfreetype6-dev \
+            libgnutls28-dev \
+            libmp3lame-dev \
+            libsdl2-dev \
+            libtool \
+            libva-dev \
+            libvdpau-dev \
+            libvorbis-dev \
+            libxcb1-dev \
+            libxcb-shm0-dev \
+            libxcb-xfixes0-dev \
+            meson \
+            nasm \
+            ninja-build \
+            pkg-config \
+            texinfo \
+            wget \
+            yasm \
+            zlib1g-dev
+
+      - name: Build x264 from source
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+            X264_SRC_DIR="$HOME/ffmpeg_sources/x264"
+            X264_BUILD_DIR="$HOME/ffmpeg_build/x264_build"
+            X264_INSTALL_DIR="$HOME/ffmpeg_build/x264"
+          
+            if [ -f "$HOME/x264_installed.flag" ]; then
+              echo "x264 already installed from cache."
+              exit 0
+            fi
+          
+            mkdir -p "$X264_BUILD_DIR"
+            cd "$X264_SRC_DIR"
+          
+            PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
+            --prefix="$X264_INSTALL_DIR" \
+            --bindir="$HOME/bin" \
+            --enable-static \
+            --enable-pic
+          
+            PATH="$HOME/bin:$PATH" make -j"$(nproc)"
+            make install
+          
+            touch "$HOME/x264_installed.flag"
+          
   build-ffmpeg:
     runs-on: ${{ matrix.os }}
     needs: 
@@ -389,6 +479,7 @@ jobs:
       - dependancy-dav1d
       - dependancy-svtav1
       - dependancy-vmaf
+      - dependancy-x264
 
     strategy:
       fail-fast: false
@@ -411,50 +502,6 @@ jobs:
         run: |
           mkdir -p $HOME/ffmpeg_sources
           mkdir -p $HOME/ffmpeg_build
-
-      # - name: Clone AOM source
-      #   run: |
-      #     cd $HOME/ffmpeg_sources
-      #     git clone --depth 1 https://aomedia.googlesource.com/aom
-      
-      # - name: Clone SVT-AV1 source
-      #   run: |
-      #     cd $HOME/ffmpeg_sources
-      #     git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
-
-      # - name: Clone dav1d source
-      #   run: |
-      #     cd $HOME/ffmpeg_sources
-      #     git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
-
-      # - name: Clone VMAF source
-      #   run: |
-      #     cd $HOME/ffmpeg_sources
-      #     git clone --depth 1 --branch libvmaf_v3 https://github.com/Netflix/vmaf.git
-
-      # - name: Get AOM commit hash
-      #   id: aom_hash
-      #   run: |
-      #     cd $HOME/ffmpeg_sources/aom
-      #     echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-      
-      # - name: Get SVT-AV1 commit hash
-      #   id: svtav1_hash
-      #   run: |
-      #     cd $HOME/ffmpeg_sources/SVT-AV1
-      #     echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-
-      # - name: Get dav1d commit hash
-      #   id: dav1d_hash
-      #   run: |
-      #     cd $HOME/ffmpeg_sources/dav1d
-      #     echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-
-      # - name: Get VMAF commit hash
-      #   id: vmaf_hash
-      #   run: |
-      #     cd $HOME/ffmpeg_sources/vmaf
-      #     echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
 # These cache steps (and anything that uses the with: path: option) only support ~/ paths, not $HOME/ or $GITHUB_WORKSPACE/. Total fucking jank.
       - name: Cache AOM build
@@ -569,6 +616,11 @@ jobs:
             SVTAV1_FLAG="--enable-libsvtav1"
           fi
 
+          X264_FLAG=""
+          if [ -f "$HOME/x264_installed.flag" ]; then
+          X264_FLAG="--enable-libx264"
+          fi
+
           # needs to be worked out, returning ERROR: libvmaf >= 2.0.0 not found using pkg-config
           # VMAF_FLAG=""
           # if [ -f "$HOME/libvmaf_installed.flag" ]; then
@@ -591,7 +643,7 @@ jobs:
           --enable-libopus \
           --enable-libvorbis \
           --enable-libvpx \
-          --enable-libx264 \
+          ${X264_FLAG} \
           --enable-libx265 \
           --enable-nonfree \
           --samples=fate-suite/
