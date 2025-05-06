@@ -315,57 +315,57 @@ jobs:
       
           touch "$HOME/libvmaf_installed.flag"
              
-      # - name: Build FFmpeg
-      #   run: |
-      #     cd ffmpeg-source
+      - name: Build FFmpeg
+        run: |
+          cd ffmpeg-source
 
-      #     export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:$HOME/ffmpeg_build/dav1d/lib/pkgconfig:$HOME/ffmpeg_build/vmaf/lib/pkgconfig:$HOME/ffmpeg_build/SVT-AV1/lib/pkgconfig:$HOME/ffmpeg_build/aom/lib/pkgconfig:$PKG_CONFIG_PATH"
-      #     export CFLAGS="-O3 -mtune=generic"
-      #     export CXXFLAGS="-O3 -mtune=generic"
+          export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:$HOME/ffmpeg_build/dav1d/lib/pkgconfig:$HOME/ffmpeg_build/vmaf/lib/pkgconfig:$HOME/ffmpeg_build/SVT-AV1/lib/pkgconfig:$HOME/ffmpeg_build/aom/lib/pkgconfig:$PKG_CONFIG_PATH"
+          export CFLAGS="-O3 -mtune=generic"
+          export CXXFLAGS="-O3 -mtune=generic"
 
-      #     AOM_FLAG=""
-      #     if [ -f "$HOME/aom_installed.flag" ]; then
-      #       AOM_FLAG="--enable-libaom"
-      #     fi
+          AOM_FLAG=""
+          if [ -f "$HOME/aom_installed.flag" ]; then
+            AOM_FLAG="--enable-libaom"
+          fi
 
-      #     DAV1D_FLAG=""
-      #     if [ -f "$HOME/dav1d_installed.flag" ]; then
-      #       DAV1D_FLAG="--enable-libdav1d"
-      #     fi
+          DAV1D_FLAG=""
+          if [ -f "$HOME/dav1d_installed.flag" ]; then
+            DAV1D_FLAG="--enable-libdav1d"
+          fi
 
-      #     SVTAV1_FLAG=""
-      #     if [ -f "$HOME/svtav1_installed.flag" ]; then
-      #       SVTAV1_FLAG="--enable-libsvtav1"
-      #     fi
+          SVTAV1_FLAG=""
+          if [ -f "$HOME/svtav1_installed.flag" ]; then
+            SVTAV1_FLAG="--enable-libsvtav1"
+          fi
 
-      #     # needs to be worked out, returning ERROR: libvmaf >= 2.0.0 not found using pkg-config
-      #     # VMAF_FLAG=""
-      #     # if [ -f "$HOME/libvmaf_installed.flag" ]; then
-      #     #   VMAF_FLAG="--enable-libvmaf"
-      #     # fi
+          # needs to be worked out, returning ERROR: libvmaf >= 2.0.0 not found using pkg-config
+          # VMAF_FLAG=""
+          # if [ -f "$HOME/libvmaf_installed.flag" ]; then
+          #   VMAF_FLAG="--enable-libvmaf"
+          # fi
 
-      #     ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
-      #     --arch=${{ matrix.arch }} \
-      #     --target-os=linux \
-      #     --enable-gpl \
-      #     --enable-gnutls \
-      #     ${AOM_FLAG} \
-      #     ${DAV1D_FLAG} \
-      #     ${SVTAV1_FLAG} \
-      #     ${VMAF_FLAG} \
-      #     --enable-libass \
-      #     --enable-libfdk-aac \
-      #     --enable-libfreetype \
-      #     --enable-libmp3lame \
-      #     --enable-libopus \
-      #     --enable-libvorbis \
-      #     --enable-libvpx \
-      #     --enable-libx264 \
-      #     --enable-libx265 \
-      #     --enable-nonfree \
-      #     --samples=fate-suite/
-      #     make -j$(nproc)
-      #     make install
+          ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
+          --arch=${{ matrix.arch }} \
+          --target-os=linux \
+          --enable-gpl \
+          --enable-gnutls \
+          ${AOM_FLAG} \
+          ${DAV1D_FLAG} \
+          ${SVTAV1_FLAG} \
+          ${VMAF_FLAG} \
+          --enable-libass \
+          --enable-libfdk-aac \
+          --enable-libfreetype \
+          --enable-libmp3lame \
+          --enable-libopus \
+          --enable-libvorbis \
+          --enable-libvpx \
+          --enable-libx264 \
+          --enable-libx265 \
+          --enable-nonfree \
+          --samples=fate-suite/
+          make -j$(nproc)
+          make install
 
       - name: Test pathing
         run: |
