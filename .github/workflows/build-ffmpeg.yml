@@ -107,7 +107,7 @@ jobs:
             ~/ffmpeg_build/aom_build
             ~/ffmpeg_build/aom
             ~/aom_installed.flag
-          key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
+          key: aom-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
   
       - name: Cache SVT-AV1 build
         uses: actions/cache@v4
@@ -116,7 +116,7 @@ jobs:
             ~/ffmpeg_build/SVT-AV1_build
             ~/ffmpeg_build/SVT-AV1
             ~/svtav1_installed.flag
-          key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
+          key: svtav1-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
       
       - name: Cache dav1d build
         uses: actions/cache@v4
@@ -125,7 +125,7 @@ jobs:
             ~/ffmpeg_build/dav1d_build
             ~/ffmpeg_build/dav1d
             ~/dav1d_installed.flag
-          key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
+          key: dav1d-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
       - name: Cache VMAF build
         uses: actions/cache@v4
@@ -134,7 +134,7 @@ jobs:
             ~/ffmpeg_build/vmaf_build
             ~/ffmpeg_build/vmaf
             ~/libvmaf_installed.flag
-          key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.vmaf_hash.outputs.hash }}
+          key: vmaf-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.vmaf_hash.outputs.hash }}
 
       - name: Update packages for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
