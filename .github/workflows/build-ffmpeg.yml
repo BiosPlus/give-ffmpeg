@@ -29,7 +29,6 @@ jobs:
           mkdir -p $HOME/ffmpeg_sources
           mkdir -p $HOME/ffmpeg_build
 
-    
       - name: Clone AOM source
         run: |
           cd $HOME/ffmpeg_sources
@@ -103,9 +102,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            $HOME/ffmpeg_build/aom_build
-            $HOME/ffmpeg_build/aom
-            $HOME/aom_installed.flag
+            ~/ffmpeg_build/aom_build
+            ~/ffmpeg_build/aom
+            ~/aom_installed.flag
           key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
   
       - name: Cache SVT-AV1 build
