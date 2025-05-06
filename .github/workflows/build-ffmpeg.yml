@@ -104,25 +104,19 @@ jobs:
         with:
           path: |
             $HOME/ffmpeg_build/aom_build
-            $HOME/ffmpeg_build/aom
-            $HOME/aom_installed.flag
           key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
   
       - name: Cache SVT-AV1 build
         uses: actions/cache@v4
         with:
           path: |
-            $HOME/ffmpeg_build/SVT-AV1_build
             $HOME/ffmpeg_build/SVT-AV1
-            $HOME/svtav1_installed.flag
           key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
       
       - name: Cache dav1d build
         uses: actions/cache@v4
         with:
           path: |
-            $HOME/ffmpeg_build/dav1d_build
-            $HOME/ffmpeg_build/dav1d
             $HOME/dav1d_installed.flag
           key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
