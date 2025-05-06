@@ -38,6 +38,65 @@ jobs:
             ~/ffmpeg_build/SVT-AV1
             ~/svtav1_installed.flag
           key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
+
+      - name: Install base dependencies for Ubuntu (APT)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+            sudo apt-get install -qq -y autoconf \
+            automake \
+            build-essential \
+            cmake \
+            git-core \
+            libass-dev \
+            libfreetype6-dev \
+            libgnutls28-dev \
+            libmp3lame-dev \
+            libsdl2-dev \
+            libtool \
+            libva-dev \
+            libvdpau-dev \
+            libvorbis-dev \
+            libxcb1-dev \
+            libxcb-shm0-dev \
+            libxcb-xfixes0-dev \
+            meson \
+            nasm \
+            ninja-build \
+            pkg-config \
+            texinfo \
+            wget \
+            yasm \
+            zlib1g-dev
+
+      - name: Build SVT-AV1 from source
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          SVT_SRC_DIR="$HOME/ffmpeg_sources/SVT-AV1"
+          SVT_BUILD_DIR="$HOME/ffmpeg_build/SVT-AV1_build"
+          SVT_INSTALL_DIR="$HOME/ffmpeg_build/SVT-AV1"
+
+          if [ -f "$HOME/svtav1_installed.flag" ]; then
+            echo "SVT-AV1 already installed from cache."
+            exit 0
+          fi
+
+          mkdir -p "$SVT_BUILD_DIR"
+          cd "$SVT_BUILD_DIR"
+
+          PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
+            -DCMAKE_INSTALL_PREFIX="$SVT_INSTALL_DIR" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_FLAGS_RELEASE="-O3 -mtune=generic" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -mtune=generic" \
+            -DBUILD_DEC=OFF \
+            -DBUILD_SHARED_LIBS=OFF \
+            "$SVT_SRC_DIR"
+
+          PATH="$HOME/bin:$PATH" make -j"$(nproc)"
+          make install
+
+          touch "$HOME/svtav1_installed.flag"
+
   dependancy-aom:
     runs-on: ubuntu-latest
     strategy:
@@ -73,33 +132,35 @@ jobs:
             ~/aom_installed.flag
           key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
 
+
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt-get install -qq -y autoconf \
-          automake \
-          build-essential \
-          cmake \
-          git-core \
-          libass-dev \
-          libfreetype6-dev \
-          libgnutls28-dev \
-          libmp3lame-dev \
-          libsdl2-dev \
-          libtool \
-          libva-dev \
-          libvdpau-dev \
-          libvorbis-dev \
-          libxcb1-dev \
-          libxcb-shm0-dev \
-          libxcb-xfixes0-dev \
-          meson \
-          ninja-build \
-          pkg-config \
-          texinfo \
-          wget \
-          yasm \
-          zlib1g-dev
+            sudo apt-get install -qq -y autoconf \
+            automake \
+            build-essential \
+            cmake \
+            git-core \
+            libass-dev \
+            libfreetype6-dev \
+            libgnutls28-dev \
+            libmp3lame-dev \
+            libsdl2-dev \
+            libtool \
+            libva-dev \
+            libvdpau-dev \
+            libvorbis-dev \
+            libxcb1-dev \
+            libxcb-shm0-dev \
+            libxcb-xfixes0-dev \
+            meson \
+            nasm \
+            ninja-build \
+            pkg-config \
+            texinfo \
+            wget \
+            yasm \
+            zlib1g-dev
 
       - name: Build AOM from source
         if: matrix.os == 'ubuntu-latest'
@@ -131,9 +192,7 @@ jobs:
 
   build-ffmpeg:
     runs-on: ${{ matrix.os }}
-    needs: 
-      - dependancy-svtav1
-      - dependancy-aom
+    needs: dependancy-svtav1
     strategy:
     
       fail-fast: false
@@ -263,16 +322,13 @@ jobs:
             libxcb-shm0-dev \
             libxcb-xfixes0-dev \
             meson \
+            nasm \
             ninja-build \
             pkg-config \
             texinfo \
             wget \
             yasm \
             zlib1g-dev
-
-      - name: Install nasm for Ubuntu (APT)
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install -qq nasm
 
       - name: Install x264 for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
@@ -293,7 +349,7 @@ jobs:
       - name: Install libopus for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq libopus-dev
-      
+
       - name: Build dav1d from source
         if: matrix.os == 'ubuntu-latest'
         run: |
