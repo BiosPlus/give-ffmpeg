@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, ubuntu-24.04-arm]
         arch: [x86_64]
         # Other arch: aarch64, arm, riscv, ppc, s390
 
