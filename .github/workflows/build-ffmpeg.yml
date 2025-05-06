@@ -39,6 +39,35 @@ jobs:
             ~/svtav1_installed.flag
           key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
 
+      - name: Build SVT-AV1 from source
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          SVT_SRC_DIR="$HOME/ffmpeg_sources/SVT-AV1"
+          SVT_BUILD_DIR="$HOME/ffmpeg_build/SVT-AV1_build"
+          SVT_INSTALL_DIR="$HOME/ffmpeg_build/SVT-AV1"
+
+          if [ -f "$HOME/svtav1_installed.flag" ]; then
+            echo "SVT-AV1 already installed from cache."
+            exit 0
+          fi
+
+          mkdir -p "$SVT_BUILD_DIR"
+          cd "$SVT_BUILD_DIR"
+
+          PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
+            -DCMAKE_INSTALL_PREFIX="$SVT_INSTALL_DIR" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_FLAGS_RELEASE="-O3 -mtune=generic" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -mtune=generic" \
+            -DBUILD_DEC=OFF \
+            -DBUILD_SHARED_LIBS=OFF \
+            "$SVT_SRC_DIR"
+
+          PATH="$HOME/bin:$PATH" make -j"$(nproc)"
+          make install
+
+          touch "$HOME/svtav1_installed.flag"
+
   build-ffmpeg:
     runs-on: ${{ matrix.os }}
     needs: dependancy-svtav1
