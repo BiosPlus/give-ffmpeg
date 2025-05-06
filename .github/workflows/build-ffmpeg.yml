@@ -573,10 +573,6 @@ jobs:
             yasm \
             zlib1g-dev
 
-      - name: Install x264 for Ubuntu (APT)
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install -qq libx264-dev
-
       - name: Install x265 for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq libx265-dev libnuma-dev
