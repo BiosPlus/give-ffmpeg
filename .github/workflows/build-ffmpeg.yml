@@ -305,20 +305,20 @@ jobs:
           cd $HOME/ffmpeg_sources
           git clone --depth 1 --branch libvmaf_v3 https://github.com/Netflix/vmaf.git
 
-      - name: Get dav1d commit hash
-        id: dav1d_hash
+      - name: Get vmaf commit hash
+        id: vmaf_hash
         run: |
-          cd $HOME/ffmpeg_sources/dav1d
+          cd $HOME/ffmpeg_sources/vmaf
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Cache dav1d build
+      - name: Cache vmaf build
         uses: actions/cache@v4
         with:
           path: |
-            ~/ffmpeg_build/dav1d_build
-            ~/ffmpeg_build/dav1d
-            ~/dav1d_installed.flag
-          key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
+            ~/ffmpeg_build/vmaf_build
+            ~/ffmpeg_build/vmaf
+            ~/libvmaf_installed.flag
+          key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.vmaf_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
@@ -388,6 +388,7 @@ jobs:
       - dependancy-aom
       - dependancy-dav1d
       - dependancy-svtav1
+      - dependancy-vmaf
 
     strategy:
       fail-fast: false
