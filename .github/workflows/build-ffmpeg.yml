@@ -39,6 +39,33 @@ jobs:
             ~/svtav1_installed.flag
           key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
 
+      - name: Install base dependencies for Ubuntu (APT)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install -qq -y autoconf \
+          automake \
+          build-essential \
+          cmake \
+          git-core \
+          libass-dev \
+          libfreetype6-dev \
+          libgnutls28-dev \
+          libmp3lame-dev \
+          libsdl2-dev \
+          libtool \
+          libva-dev \
+          libvdpau-dev \
+          libvorbis-dev \
+          libxcb1-dev \
+          libxcb-shm0-dev \
+          libxcb-xfixes0-dev \
+          meson \
+          ninja-build \
+          pkg-config \
+          texinfo \
+          wget \
+          yasm \
+          zlib1g-dev
       - name: Build SVT-AV1 from source
         if: matrix.os == 'ubuntu-latest'
         run: |
