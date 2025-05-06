@@ -289,9 +289,9 @@ jobs:
   build-ffmpeg:
     runs-on: ${{ matrix.os }}
     needs: 
-      - dependancy-svtav1
       - dependancy-aom
       - dependancy-dav1d
+      - dependancy-svtav1
 
     strategy:
       fail-fast: false
