@@ -720,6 +720,10 @@ jobs:
           # Initialize flags
           CONFIG_FLAGS="--enable-nonfree --enable-gpl --enable-gnutls --enable-libass --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libvorbis"
 
+          # List all available pkg-config packages
+          echo "⚠️ Available pkg-config packages:"
+          pkg-config --list-all
+
           # Loop through each library and check if it exists
           for LIB in "${LIBRARIES[@]}"; do
           if pkg-config --exists "$LIB"; then
