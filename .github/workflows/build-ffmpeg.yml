@@ -751,6 +751,7 @@ jobs:
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
             --arch=${{ matrix.arch }} \
             --target-os=linux \
+            --enable-nonfree \
             --enable-gpl \
             --enable-gnutls \
             $AOM_FLAG \
@@ -765,8 +766,7 @@ jobs:
             --enable-libvorbis \
             #libvpx_FLAG \
             $libx264_FLAG \
-            $libX265_FLAG \
-            --enable-nonfree \
+            $libX265_FLAG \ \
             --samples=fate-suite/
 
           make -j$(nproc)
