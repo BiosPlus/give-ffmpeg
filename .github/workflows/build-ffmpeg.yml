@@ -700,6 +700,7 @@ jobs:
             ls -al "$dir"
           done
 
+          # Set compiler flags
           export CFLAGS="-O3 -mtune=generic"
           export CXXFLAGS="-O3 -mtune=generic"
 
