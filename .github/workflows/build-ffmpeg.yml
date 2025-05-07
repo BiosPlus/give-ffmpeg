@@ -673,7 +673,7 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: |
-            sudo apt-get install -qq -y autoconf \
+            sudo apt install -qq -y autoconf \
             automake \
             build-essential \
             cmake \
@@ -724,16 +724,16 @@ jobs:
           for LIB in "${LIBRARIES[@]}"; do
           if pkg-config --exists "$LIB"; then
             case "$LIB" in
-            "libaom") CONFIG_FLAGS+=" --enable-libaom"; echo "Found libaom, enabling AOM support." ;;
-            "dav1d") CONFIG_FLAGS+=" --enable-libdav1d"; echo "Found dav1d, enabling DAV1D support." ;;
-            "SvtAv1Enc") CONFIG_FLAGS+=" --enable-libsvtav1"; echo "Found SVT-AV1, enabling SVT-AV1 support." ;;
-            "libx264") CONFIG_FLAGS+=" --enable-libx264"; echo "Found libx264, enabling x264 support." ;;
-            "libx265") CONFIG_FLAGS+=" --enable-libx265"; echo "Found libx265, enabling x265 support." ;;
-            "libopus") CONFIG_FLAGS+=" --enable-libopus"; echo "Found libopus, enabling Opus support." ;;
-            "vpx") CONFIG_FLAGS+=" --enable-libvpx"; echo "Found libvpx, enabling libVPX support." ;;
+            "libaom") CONFIG_FLAGS+=" --enable-libaom"; echo "✅ Found libaom, enabling AOM support." ;;
+            "dav1d") CONFIG_FLAGS+=" --enable-libdav1d"; echo "✅ Found dav1d, enabling DAV1D support." ;;
+            "SvtAv1Enc") CONFIG_FLAGS+=" --enable-libsvtav1"; echo "✅ Found SVT-AV1, enabling SVT-AV1 support." ;;
+            "libx264") CONFIG_FLAGS+=" --enable-libx264"; echo "✅ Found libx264, enabling x264 support." ;;
+            "libx265") CONFIG_FLAGS+=" --enable-libx265"; echo "✅ Found libx265, enabling x265 support." ;;
+            "libopus") CONFIG_FLAGS+=" --enable-libopus"; echo "✅ Found libopus, enabling Opus support." ;;
+            "vpx") CONFIG_FLAGS+=" --enable-libvpx"; echo "✅ Found libvpx, enabling libVPX support." ;;
             esac
           else
-            echo "Library $LIB not found, skipping."
+            echo "❌ Library $LIB not found, skipping."
           fi
           done
 
