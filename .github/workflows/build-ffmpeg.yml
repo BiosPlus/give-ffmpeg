@@ -512,11 +512,6 @@ jobs:
             libx265_SRC_DIR="$HOME/ffmpeg_sources/libx265"
             libx265_BUILD_DIR="$HOME/ffmpeg_build/libx265_build"
             libx265_INSTALL_DIR="$HOME/ffmpeg_build/libx265"
-            
-            if [ -f "$HOME/libx265_installed.flag" ]; then
-              echo "libx265 already installed from cache."
-              exit 0
-            fi
         
             mkdir -p "$libx265_BUILD_DIR"
             cd "$libx265_SRC_DIR/build/linux"
