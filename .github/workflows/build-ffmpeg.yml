@@ -43,7 +43,7 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-svtav1.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get install -qq -y build-essential \
+          sudo apt install -qq -y build-essential \
           cmake \
           git-core \
           libtool \
@@ -114,7 +114,7 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-dav1d.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get install -qq -y build-essential \
+          sudo apt install -qq -y build-essential \
             cmake \
             git-core \
             libtool \
@@ -187,7 +187,7 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-aom.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get install -qq -y build-essential \
+          sudo apt install -qq -y build-essential \
             cmake \
             git-core \
             libtool \
@@ -256,7 +256,7 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libvmaf.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get install -qq -y build-essential \
+          sudo apt install -qq -y build-essential \
             cmake \
             git-core \
             libtool \
@@ -331,7 +331,7 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libx264.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get install -qq -y build-essential \
+          sudo apt install -qq -y build-essential \
             cmake \
             git-core \
             libtool \
@@ -401,7 +401,7 @@ jobs:
         - name: Install base dependencies for Ubuntu (APT)
           if: matrix.os == 'ubuntu-latest' && steps.cache-libx265.outputs.cache-hit != 'true'
           run: |
-              sudo apt-get install -qq -y build-essential \
+              sudo apt install -qq -y build-essential \
               cmake \
               git-core \
               libtool \
@@ -471,7 +471,7 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libopus.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get install -qq -y autoconf \
+          sudo apt install -qq -y autoconf \
           automake \
           build-essential \
           cmake \
@@ -531,7 +531,7 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libvpx.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get install -qq -y autoconf \
+          sudo apt install -qq -y autoconf \
           automake \
           build-essential \
           cmake \
@@ -668,7 +668,7 @@ jobs:
 
       - name: Update packages for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get update
+        run: sudo apt update
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
@@ -701,7 +701,7 @@ jobs:
 
       - name: Install libfdk-aac for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install -qq libfdk-aac-dev
+        run: sudo apt install -qq libfdk-aac-dev
              
       - name: Build FFmpeg
         run: |
