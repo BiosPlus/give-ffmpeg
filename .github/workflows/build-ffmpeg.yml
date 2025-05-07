@@ -714,60 +714,34 @@ jobs:
           export CFLAGS="-O3 -mtune=generic"
           export CXXFLAGS="-O3 -mtune=generic"
 
-          # Flags for optional codec support (enable only if installed)
+          # Define an array of libraries to check
+          LIBRARIES=("libaom" "dav1d" "SvtAv1Enc" "libx264" "libx265" "libopus" "vpx")
 
-            # Doesn't work
-            AOM_FLAG=$(pkg-config --exists libaom && echo "--enable-libaom" || echo "")
-            [ -n "$AOM_FLAG" ] && echo "Found libaom, enabling AOM support."
+          # Initialize flags
+          CONFIG_FLAGS="--enable-nonfree --enable-gpl --enable-gnutls --enable-libass --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libvorbis"
 
-            # WORKS
-            DAV1D_FLAG=$(pkg-config --exists dav1d && echo "--enable-libdav1d" || echo "")
-            [ -n "$DAV1D_FLAG" ] && echo "Found dav1d, enabling DAV1D support."
-
-            # WORKS
-            SVTAV1_FLAG=$(pkg-config --exists SvtAv1Enc && echo "--enable-libsvtav1" || echo "")
-            [ -n "$SVTAV1_FLAG" ] && echo "Found SVT-AV1, enabling SVT-AV1 support."
-
-            # Doesn't work
-            libx264_FLAG=$(pkg-config --exists libx264 && echo "--enable-libx264" || echo "")
-            [ -n "$libx264_FLAG" ] && echo "Found libx264, enabling x264 support."
-
-            # Doesn't work
-            libX265_FLAG=$(pkg-config --exists libx265 && echo "--enable-libx265" || echo "")
-            [ -n "$libX265_FLAG" ] && echo "Found libx265, enabling x265 support."
-
-            # Doesn't work
-            libopus_FLAG=$(pkg-config --exists libopus && echo "--enable-libopus" || echo "")
-            [ -n "$libopus_FLAG" ] && echo "Found libopus, enabling Opus support."
-
-            # Doesn't work
-            # libvmaf_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
-            # [ -n "$libvmaf_FLAG" ] && echo "Found libvmaf, enabling VMAF support."
-
-            # Testing now
-            libvpx_FLAG=$(pkg-config --exists vpx && echo "--enable-libvpx" || echo "")
-            [ -n "$libvpx_FLAG" ] && echo "Found libvpx, enabling libVPX support."
+          # Loop through each library and check if it exists
+          for LIB in "${LIBRARIES[@]}"; do
+          if pkg-config --exists "$LIB"; then
+            case "$LIB" in
+            "libaom") CONFIG_FLAGS+=" --enable-libaom"; echo "Found libaom, enabling AOM support." ;;
+            "dav1d") CONFIG_FLAGS+=" --enable-libdav1d"; echo "Found dav1d, enabling DAV1D support." ;;
+            "SvtAv1Enc") CONFIG_FLAGS+=" --enable-libsvtav1"; echo "Found SVT-AV1, enabling SVT-AV1 support." ;;
+            "libx264") CONFIG_FLAGS+=" --enable-libx264"; echo "Found libx264, enabling x264 support." ;;
+            "libx265") CONFIG_FLAGS+=" --enable-libx265"; echo "Found libx265, enabling x265 support." ;;
+            "libopus") CONFIG_FLAGS+=" --enable-libopus"; echo "Found libopus, enabling Opus support." ;;
+            "vpx") CONFIG_FLAGS+=" --enable-libvpx"; echo "Found libvpx, enabling libVPX support." ;;
+            esac
+          else
+            echo "Library $LIB not found, skipping."
+          fi
+          done
 
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
-            --arch=${{ matrix.arch }} \
-            --target-os=linux \
-            --enable-nonfree \
-            --enable-gpl \
-            --enable-gnutls \
-            $AOM_FLAG \
-            $DAV1D_FLAG \
-            $SVTAV1_FLAG \
-            $libvmaf_FLAG \
-            --enable-libass \
-            --enable-libfdk-aac \
-            --enable-libfreetype \
-            --enable-libmp3lame \
-            $libopus_FLAG \
-            --enable-libvorbis \
-            $libvpx_FLAG \
-            $libx264_FLAG \
-            $libX265_FLAG \ \
-            --samples=fate-suite/
+          --arch=${{ matrix.arch }} \
+          --target-os=linux \
+          $CONFIG_FLAGS \
+          --samples=fate-suite/
 
           make -j$(nproc)
           make install
