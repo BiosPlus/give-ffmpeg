@@ -673,7 +673,7 @@ jobs:
             $libopus_FLAG \
             --enable-libvorbis \
             --enable-libvpx \
-            $X264_FLAG \
+            $libx264_FLAG \
             $libX265_FLAG \
             --enable-nonfree \
             --samples=fate-suite/
