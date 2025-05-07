@@ -657,6 +657,15 @@ jobs:
             ~/libopus_installed.flag
           key: libopus-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libopus_hash.outputs.hash }}
 
+      - name: Cache libvpx build
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/ffmpeg_build/libvpx_build
+            ~/ffmpeg_build/libvpx
+            ~/libvpx_installed.flag
+          key: libvpx-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvpx_hash.outputs.hash }}
+
       - name: Update packages for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update
@@ -735,6 +744,10 @@ jobs:
             # libvmaf_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
             # [ -n "$libvmaf_FLAG" ] && echo "Found libvmaf, enabling VMAF support."
 
+            # Testing now
+            libvpx_FLAG=$(pkg-config --exists vpx && echo "--enable-libvpx" || echo "")
+            [ -n "$libvpx_FLAG" ] && echo "Found libvpx, enabling libVPX support."
+
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
             --arch=${{ matrix.arch }} \
             --target-os=linux \
@@ -750,7 +763,7 @@ jobs:
             --enable-libmp3lame \
             $libopus_FLAG \
             --enable-libvorbis \
-            --enable-libvpx \
+            #libvpx_FLAG \
             $libx264_FLAG \
             $libX265_FLAG \
             --enable-nonfree \
