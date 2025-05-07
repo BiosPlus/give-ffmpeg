@@ -544,8 +544,8 @@ jobs:
                 x265_INSTALL_DIR="$HOME/ffmpeg_build/x265"
               
                 if [ -f "$HOME/x265_installed.flag" ]; then
-                echo "x265 already installed from cache."
-                exit 0
+                  echo "x265 already installed from cache."
+                  exit 0
                 fi
               
                 mkdir -p "$x265_BUILD_DIR"
