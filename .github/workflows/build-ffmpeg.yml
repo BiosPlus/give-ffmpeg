@@ -639,6 +639,15 @@ jobs:
             ~/x264_installed.flag
           key: x264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.x264_hash.outputs.hash }}
 
+      - name: Cache x265 build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/ffmpeg_build/x265_build
+            ~/ffmpeg_build/x265
+            ~/x265_installed.flag
+          key: x265-${{ runner.os }}-${{ matrix.arch }}-${{ steps.x265_hash.outputs.hash }}
+
       - name: Update packages for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update
