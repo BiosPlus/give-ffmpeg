@@ -507,7 +507,7 @@ jobs:
               zlib1g-dev
 
         - name: Build libx265 from source
-          if: matrix.os == 'ubuntu-latest'
+          if: matrix.os == 'ubuntu-latest' && steps.cache-libx265.outputs.cache-hit != 'true'
           run: |
             libx265_SRC_DIR="$HOME/ffmpeg_sources/libx265"
             libx265_BUILD_DIR="$HOME/ffmpeg_build/libx265_build"
