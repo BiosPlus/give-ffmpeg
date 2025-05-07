@@ -543,7 +543,6 @@ jobs:
             mkdir -p "$x265_BUILD_DIR"
             cd "$x265_SRC_DIR/build/linux"
         
-            # Configure and build x265 (note: source is nested inside /source)
             PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
               -DCMAKE_INSTALL_PREFIX="$x265_INSTALL_DIR" \
               -DENABLE_SHARED=off \
@@ -554,19 +553,34 @@ jobs:
             PATH="$HOME/bin:$PATH" make -j"$(nproc)"
             make install
         
-            # Sanity check: does the .pc file actually exist?
-            echo "Installed x265.pc:"
-            find "$x265_INSTALL_DIR" -name 'x265.pc'
+            # Locate and patch x265.pc
+            X265_PC_PATH=$(find "$x265_INSTALL_DIR" -name x265.pc | head -n 1)
         
-            # Make sure pkg-config can find it
-            export PKG_CONFIG_PATH="$x265_INSTALL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH"
-            echo "pkg-config x265 check:"
-            pkg-config --exists x265 && echo "✅ x265 detected by pkg-config" || echo "❌ x265 NOT detected by pkg-config"
+            if [ -z "$X265_PC_PATH" ]; then
+              echo "❌ x265.pc file not found after install!"
+              exit 1
+            fi
+        
+            echo "Found x265.pc at: $X265_PC_PATH"
+            echo "Original contents:"
+            cat "$X265_PC_PATH"
+        
+            # Patch to correct paths and ensure pkg-config compatibility
+            sed -i 's|^prefix=.*|prefix='"$x265_INSTALL_DIR"'|' "$X265_PC_PATH"
+            sed -i 's|^libdir=.*|libdir=${prefix}/lib|' "$X265_PC_PATH"
+            sed -i 's|^includedir=.*|includedir=${prefix}/include|' "$X265_PC_PATH"
+        
+            echo "Patched x265.pc:"
+            cat "$X265_PC_PATH"
+        
+            # Confirm pkg-config visibility
+            export PKG_CONFIG_PATH="$(dirname "$X265_PC_PATH"):$PKG_CONFIG_PATH"
+            echo "Verifying with pkg-config..."
+            pkg-config --exists x265 && echo "✅ x265 detected by pkg-config" || { echo "❌ x265 still not detected. Giving up."; exit 1; }
         
             touch "$HOME/x265_installed.flag"
+            
         
-
-
   build-ffmpeg:
     runs-on: ${{ matrix.os }}
     needs: 
