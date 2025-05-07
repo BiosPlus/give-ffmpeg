@@ -566,10 +566,10 @@ jobs:
       - dependancy-dav1d
       - dependancy-libopus
       - dependancy-libvmaf
+      - dependancy-libvpx
       - dependancy-libx264
       - dependancy-libx265
       - dependancy-svtav1
-      - dependancy-libvpx
 
     strategy:
       fail-fast: false
