@@ -554,7 +554,7 @@ jobs:
             make install
         
             # # Locate and patch libx265.pc
-            # libx265_PC_PATH=$(find "$libx265_INSTALL_DIR" -name libx265.pc | head -n 1)
+            # libx265_PC_PATH=$(find "$libx265_INSTALL_DIR" -name x265.pc | head -n 1)
         
             if [ -z "$libX265_PC_PATH" ]; then
               echo "❌ libx265.pc file not found after install!"
