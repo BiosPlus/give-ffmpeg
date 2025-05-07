@@ -685,6 +685,22 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get install -qq libopus-dev
              
+      - name: Debug PKG_CONFIG_PATH and list .pc files
+        run: |          
+          echo "Finding all directories with .pc files under ~/ffmpeg_build"
+    
+          export PKG_CONFIG_PATH=$(find ~/ffmpeg_build -type f -name '*.pc' -exec dirname {} \; | sort -u | tr '\n' ':' | sed 's/:$//')
+          
+          echo "Final PKG_CONFIG_PATH:"
+          echo "$PKG_CONFIG_PATH"
+      
+          echo ""
+          echo "Verifying contents of each dir in PKG_CONFIG_PATH:"
+          for dir in $(echo "$PKG_CONFIG_PATH" | tr ':' '\n'); do
+            echo "→ $dir"
+            ls -al "$dir"
+          done
+
       - name: Build FFmpeg
         run: |
           cd ffmpeg-source
