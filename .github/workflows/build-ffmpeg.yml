@@ -123,6 +123,7 @@ jobs:
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           
       - name: Cache dav1d build
+        id: cache-dav1d
         uses: actions/cache@v4
         with:
           path: |
@@ -132,7 +133,7 @@ jobs:
           key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && steps.cache-dav1d.outputs.cache-hit != 'true'
         run: |
             sudo apt-get install -qq -y autoconf \
             automake \
@@ -161,7 +162,7 @@ jobs:
             zlib1g-dev
 
       - name: Build dav1d from source
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && steps.cache-dav1d.outputs.cache-hit != 'true'
         run: |
           DAV1D_SRC_DIR="$HOME/ffmpeg_sources/dav1d"
           DAV1D_BUILD_DIR="$HOME/ffmpeg_build/dav1d_build"
@@ -217,6 +218,7 @@ jobs:
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       
       - name: Cache AOM build
+        id: cache-aom
         uses: actions/cache@v4
         with:
           path: |
@@ -224,17 +226,9 @@ jobs:
             ~/ffmpeg_build/aom
             ~/aom_installed.flag
           key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
-
-      - name: Check for existing AOM build.
-        continue-on-error: false
-        run: |
-          if [ -f "$HOME/aom_installed.flag" ]; then
-            echo "AOM already installed from cache."
-            exit 0
-          fi
-
+      
       - name: Install base dependencies for Ubuntu (APT)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && steps.cache-aom.outputs.cache-hit != 'true'
         run: |
             sudo apt-get install -qq -y autoconf \
             automake \
@@ -263,7 +257,7 @@ jobs:
             zlib1g-dev
 
       - name: Build AOM from source
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && steps.cache-aom.outputs.cache-hit != 'true'
         run: |
           AOM_SRC_DIR="$HOME/ffmpeg_sources/aom"
           AOM_BUILD_DIR="$HOME/ffmpeg_build/aom_build"
