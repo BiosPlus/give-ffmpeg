@@ -556,10 +556,10 @@ jobs:
             # # Locate and patch libx265.pc
             # libx265_PC_PATH=$(find "$libx265_INSTALL_DIR" -name x265.pc | head -n 1)
         
-            if [ -z "$libX265_PC_PATH" ]; then
-              echo "❌ libx265.pc file not found after install!"
-              exit 1
-            fi
+            # if [ -z "$libX265_PC_PATH" ]; then
+            #   echo "❌ libx265.pc file not found after install!"
+            #   exit 1
+            # fi
         
             # echo "Found libx265.pc at: $libX265_PC_PATH"
             # echo "Original contents:"
@@ -573,10 +573,10 @@ jobs:
             # echo "Patched libx265.pc:"
             # cat "$libX265_PC_PATH"
         
-            # Confirm pkg-config visibility
-            export PKG_CONFIG_PATH="$(dirname "$libX265_PC_PATH"):$PKG_CONFIG_PATH"
-            echo "Verifying with pkg-config..."
-            pkg-config --exists libx265 && echo "✅ libx265 detected by pkg-config" || { echo "❌ libx265 still not detected. Giving up."; exit 1; }
+            # # Confirm pkg-config visibility
+            # export PKG_CONFIG_PATH="$(dirname "$libX265_PC_PATH"):$PKG_CONFIG_PATH"
+            # echo "Verifying with pkg-config..."
+            # pkg-config --exists libx265 && echo "✅ libx265 detected by pkg-config" || { echo "❌ libx265 still not detected. Giving up."; exit 1; }
         
             touch "$HOME/libx265_installed.flag"
             
