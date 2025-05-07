@@ -636,9 +636,12 @@ jobs:
           export CXXFLAGS="-O3 -mtune=generic"
 
           # Flags for optional codec support (enable only if installed)
+
+            # WORKS
             AOM_FLAG=$(pkg-config --exists libaom && echo "--enable-libaom" || echo "")
             [ -n "$AOM_FLAG" ] && echo "Found libaom, enabling AOM support."
 
+            # WORKS
             DAV1D_FLAG=$(pkg-config --exists dav1d && echo "--enable-libdav1d" || echo "")
             [ -n "$DAV1D_FLAG" ] && echo "Found dav1d, enabling DAV1D support."
 
