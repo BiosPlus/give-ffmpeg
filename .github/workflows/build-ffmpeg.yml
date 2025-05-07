@@ -187,13 +187,14 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && steps.cache-aom.outputs.cache-hit != 'true'
         run: |
           sudo apt-get install -qq -y build-essential \
-          cmake \
-          git-core \
-          libtool \
-          pkg-config \
-          wget \
-          yasm \
-          zlib1g-dev
+            cmake \
+            git-core \
+            libtool \
+            pkg-config \
+            wget \
+            yasm \
+            zlib1g-dev \
+            nasm
 
       - name: Build AOM from source
         if: matrix.os == 'ubuntu-latest' && steps.cache-aom.outputs.cache-hit != 'true'
