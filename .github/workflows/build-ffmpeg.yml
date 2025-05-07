@@ -623,7 +623,7 @@ jobs:
 
 # These cache steps (and anything that uses the with: path: option) only support ~/ paths, not $HOME/ or $GITHUB_WORKSPACE/. Total fucking jank.
       - name: Cache AOM build
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/ffmpeg_build/aom_build
@@ -632,7 +632,7 @@ jobs:
           key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
   
       - name: Cache SVT-AV1 build
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/ffmpeg_build/SVT-AV1_build
@@ -641,7 +641,7 @@ jobs:
           key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
       
       - name: Cache dav1d build
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/ffmpeg_build/dav1d_build
@@ -650,7 +650,7 @@ jobs:
           key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
       - name: Cache libvmaf build
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/ffmpeg_build/libvmaf_build
@@ -659,7 +659,7 @@ jobs:
           key: libvmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvmaf_hash.outputs.hash }}
 
       - name: Cache libx264 build
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/ffmpeg_build/libx264_build
@@ -668,7 +668,7 @@ jobs:
           key: libx264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx264_hash.outputs.hash }}
 
       - name: Cache libx265 build
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/ffmpeg_build/libx265_build
@@ -677,7 +677,7 @@ jobs:
           key: libx265-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx265_hash.outputs.hash }}
 
       - name: Cache libopus build
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/ffmpeg_build/libopus_build
