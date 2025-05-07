@@ -704,36 +704,13 @@ jobs:
           export CFLAGS="-O3 -mtune=generic"
           export CXXFLAGS="-O3 -mtune=generic"
 
-          AOM_FLAG=""
-          if [ -f "$HOME/aom_installed.flag" ]; then
-            AOM_FLAG="--enable-libaom"
-          fi
-
-          DAV1D_FLAG=""
-          if [ -f "$HOME/dav1d_installed.flag" ]; then
-            DAV1D_FLAG="--enable-libdav1d"
-          fi
-
-          SVTAV1_FLAG=""
-          if [ -f "$HOME/svtav1_installed.flag" ]; then
-            SVTAV1_FLAG="--enable-libsvtav1"
-          fi
-
-          X264_FLAG=""
-          if [ -f "$HOME/x264_installed.flag" ]; then
-            X264_FLAG="--enable-libx264"
-          fi
-
-          X265_FLAG=""
-          if [ -f "$HOME/x265_installed.flag" ]; then
-            X265_FLAG="--enable-libx265"
-          fi
-
-          # needs to be worked out, returning ERROR: libvmaf >= 2.0.0 not found using pkg-config
-          # VMAF_FLAG=""
-          # if [ -f "$HOME/libvmaf_installed.flag" ]; then
-          #   VMAF_FLAG="--enable-libvmaf"
-          # fi
+          # Flags for optional codec support (enable only if installed)
+          AOM_FLAG=$(pkg-config --exists libaom && echo "--enable-libaom" || echo "")
+          DAV1D_FLAG=$(pkg-config --exists dav1d && echo "--enable-libdav1d" || echo "")
+          SVTAV1_FLAG=$(pkg-config --exists SvtAv1Enc && echo "--enable-libsvtav1" || echo "")
+          VMAF_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
+          X264_FLAG=$(pkg-config --exists x264 && echo "--enable-libx264" || echo "")
+          X265_FLAG=$(pkg-config --exists x265 && echo "--enable-libx265" || echo "")
 
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
           --arch=${{ matrix.arch }} \
