@@ -569,6 +569,7 @@ jobs:
       - dependancy-svtav1
       - dependancy-vmaf
       - dependancy-x264
+      - dependancy-x265
 
     strategy:
       fail-fast: false
