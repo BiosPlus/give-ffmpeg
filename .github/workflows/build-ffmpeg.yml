@@ -374,7 +374,7 @@ jobs:
       
           touch "$HOME/libvmaf_installed.flag"
 
-  dependancy-x264:
+  dependancy-libx264:
     runs-on: ubuntu-latest
     strategy:
     
@@ -389,25 +389,25 @@ jobs:
           mkdir -p $HOME/ffmpeg_sources
           mkdir -p $HOME/ffmpeg_build
       
-      - name: Clone x264 source
+      - name: Clone libx264 source
         run: |
           cd $HOME/ffmpeg_sources
-          git clone --depth 1 https://code.videolan.org/videolan/x264.git
+          git clone --depth 1 https://code.videolan.org/videolan/x264.git libx264
 
-      - name: Get x264 commit hash
-        id: x264_hash
+      - name: Get libx264 commit hash
+        id: libx264_hash
         run: |
-          cd $HOME/ffmpeg_sources/x264
+          cd $HOME/ffmpeg_sources/libx264
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       
-      - name: Cache x264 build
+      - name: Cache libx264 build
         uses: actions/cache@v4
         with:
           path: |
-            ~/ffmpeg_build/x264_build
-            ~/ffmpeg_build/x264
-            ~/x264_installed.flag
-          key: x264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.x264_hash.outputs.hash }}
+            ~/ffmpeg_build/libx264_build
+            ~/ffmpeg_build/libx264
+            ~/libx264_installed.flag
+          key: libx264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx264_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
@@ -438,23 +438,23 @@ jobs:
             yasm \
             zlib1g-dev
 
-      - name: Build x264 from source
+      - name: Build libx264 from source
         if: matrix.os == 'ubuntu-latest'
         run: |
-            X264_SRC_DIR="$HOME/ffmpeg_sources/x264"
-            X264_BUILD_DIR="$HOME/ffmpeg_build/x264_build"
-            X264_INSTALL_DIR="$HOME/ffmpeg_build/x264"
+            libx264_SRC_DIR="$HOME/ffmpeg_sources/libx264"
+            libx264_BUILD_DIR="$HOME/ffmpeg_build/libx264_build"
+            libx264_INSTALL_DIR="$HOME/ffmpeg_build/libx264"
           
-            if [ -f "$HOME/x264_installed.flag" ]; then
-              echo "x264 already installed from cache."
+            if [ -f "$HOME/libx264_installed.flag" ]; then
+              echo "libx264 already installed from cache."
               exit 0
             fi
           
-            mkdir -p "$X264_BUILD_DIR"
-            cd "$X264_SRC_DIR"
+            mkdir -p "$libx264_BUILD_DIR"
+            cd "$libx264_SRC_DIR"
           
             PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
-            --prefix="$X264_INSTALL_DIR" \
+            --prefix="$libx264_INSTALL_DIR" \
             --bindir="$HOME/bin" \
             --enable-static \
             --enable-pic
@@ -462,7 +462,7 @@ jobs:
             PATH="$HOME/bin:$PATH" make -j"$(nproc)"
             make install
           
-            touch "$HOME/x264_installed.flag"
+            touch "$HOME/libx264_installed.flag"
 
   dependancy-libx265:
       runs-on: ubuntu-latest
@@ -552,32 +552,7 @@ jobs:
         
             PATH="$HOME/bin:$PATH" make -j"$(nproc)"
             make install
-        
-            # # Locate and patch libx265.pc
-            # libx265_PC_PATH=$(find "$libx265_INSTALL_DIR" -name x265.pc | head -n 1)
-        
-            # if [ -z "$libX265_PC_PATH" ]; then
-            #   echo "❌ libx265.pc file not found after install!"
-            #   exit 1
-            # fi
-        
-            # echo "Found libx265.pc at: $libX265_PC_PATH"
-            # echo "Original contents:"
-            # cat "$libX265_PC_PATH"
-        
-            # # Patch to correct paths and ensure pkg-config compatibility
-            # sed -i 's|^prefix=.*|prefix='"$libx265_INSTALL_DIR"'|' "$libX265_PC_PATH"
-            # sed -i 's|^libdir=.*|libdir=${prefix}/lib|' "$libX265_PC_PATH"
-            # sed -i 's|^includedir=.*|includedir=${prefix}/include|' "$libX265_PC_PATH"
-        
-            # echo "Patched libx265.pc:"
-            # cat "$libX265_PC_PATH"
-        
-            # # Confirm pkg-config visibility
-            # export PKG_CONFIG_PATH="$(dirname "$libX265_PC_PATH"):$PKG_CONFIG_PATH"
-            # echo "Verifying with pkg-config..."
-            # pkg-config --exists libx265 && echo "✅ libx265 detected by pkg-config" || { echo "❌ libx265 still not detected. Giving up."; exit 1; }
-        
+               
             touch "$HOME/libx265_installed.flag"
             
         
@@ -588,7 +563,7 @@ jobs:
       - dependancy-dav1d
       - dependancy-svtav1
       - dependancy-vmaf
-      - dependancy-x264
+      - dependancy-libx264
       - dependancy-libx265
 
     strategy:
@@ -650,14 +625,14 @@ jobs:
             ~/libvmaf_installed.flag
           key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.vmaf_hash.outputs.hash }}
 
-      - name: Cache x264 build
+      - name: Cache libx264 build
         uses: actions/cache@v4
         with:
           path: |
-            ~/ffmpeg_build/x264_build
-            ~/ffmpeg_build/x264
-            ~/x264_installed.flag
-          key: x264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.x264_hash.outputs.hash }}
+            ~/ffmpeg_build/libx264_build
+            ~/ffmpeg_build/libx264
+            ~/libx264_installed.flag
+          key: libx264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx264_hash.outputs.hash }}
 
       - name: Cache libx265 build
         uses: actions/cache@v4
@@ -738,7 +713,7 @@ jobs:
           DAV1D_FLAG=$(pkg-config --exists dav1d && echo "--enable-libdav1d" || echo "")
           SVTAV1_FLAG=$(pkg-config --exists SvtAv1Enc && echo "--enable-libsvtav1" || echo "")
           # VMAF_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
-          X264_FLAG=$(pkg-config --exists x264 && echo "--enable-libx264" || echo "")
+          libx264_FLAG=$(pkg-config --exists libx264 && echo "--enable-libx264" || echo "")
           libX265_FLAG=$(pkg-config --exists libx265 && echo "--enable-libx265" || echo "")
 
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
