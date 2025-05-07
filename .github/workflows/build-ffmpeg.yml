@@ -256,13 +256,14 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && steps.cache-libvmaf.outputs.cache-hit != 'true'
         run: |
           sudo apt-get install -qq -y build-essential \
-          cmake \
-          git-core \
-          libtool \
-          pkg-config \
-          wget \
-          yasm \
-          zlib1g-dev
+            cmake \
+            git-core \
+            libtool \
+            meson \
+            pkg-config \
+            wget \
+            yasm \
+            zlib1g-dev
 
       - name: Build libvmaf from source
         if: matrix.os == 'ubuntu-latest' && steps.cache-libvmaf.outputs.cache-hit != 'true'
