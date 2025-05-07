@@ -701,7 +701,7 @@ jobs:
         run: |
           cd ffmpeg-source
 
-          export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:$HOME/ffmpeg_build/dav1d/lib/pkgconfig:$HOME/ffmpeg_build/vmaf/lib/pkgconfig:$HOME/ffmpeg_build/SVT-AV1/lib/pkgconfig:$HOME/ffmpeg_build/aom/lib/pkgconfig:$PKG_CONFIG_PATH"
+          export PKG_CONFIG_PATH="/home/runner/ffmpeg_build/vmaf/lib/pkgconfig:$HOME/ffmpeg_build/lib/pkgconfig:$HOME/ffmpeg_build/dav1d/lib/pkgconfig:$HOME/ffmpeg_build/SVT-AV1/lib/pkgconfig:$HOME/ffmpeg_build/aom/lib/pkgconfig:$HOME/ffmpeg_build/x265/lib/pkgconfig:$HOME/ffmpeg_build/x264/lib/pkgconfig:$PKG_CONFIG_PATH"
           export CFLAGS="-O3 -mtune=generic"
           export CXXFLAGS="-O3 -mtune=generic"
 
