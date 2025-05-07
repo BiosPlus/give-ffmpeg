@@ -31,6 +31,7 @@ jobs:
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       
       - name: Cache SVT-AV1 build
+        id: cache-svtav1
         uses: actions/cache@v4
         with:
           path: |
@@ -167,7 +168,7 @@ jobs:
           DAV1D_SRC_DIR="$HOME/ffmpeg_sources/dav1d"
           DAV1D_BUILD_DIR="$HOME/ffmpeg_build/dav1d_build"
           DAV1D_INSTALL_DIR="$HOME/ffmpeg_build/dav1d"
-                
+
           mkdir -p "$DAV1D_BUILD_DIR"
           cd "$DAV1D_BUILD_DIR"
 
