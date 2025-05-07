@@ -43,31 +43,14 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-svtav1.outputs.cache-hit != 'true'
         run: |
-            sudo apt-get install -qq -y autoconf \
-            automake \
-            build-essential \
-            cmake \
-            git-core \
-            libass-dev \
-            libfreetype6-dev \
-            libgnutls28-dev \
-            libmp3lame-dev \
-            libsdl2-dev \
-            libtool \
-            libva-dev \
-            libvdpau-dev \
-            libvorbis-dev \
-            libxcb1-dev \
-            libxcb-shm0-dev \
-            libxcb-xfixes0-dev \
-            meson \
-            nasm \
-            ninja-build \
-            pkg-config \
-            texinfo \
-            wget \
-            yasm \
-            zlib1g-dev
+          sudo apt-get install -qq -y build-essential \
+          cmake \
+          git-core \
+          libtool \
+          pkg-config \
+          wget \
+          yasm \
+          zlib1g-dev
 
       - name: Build SVT-AV1 from source
         if: matrix.os == 'ubuntu-latest' && steps.cache-svtav1.outputs.cache-hit != 'true'
@@ -131,31 +114,14 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-dav1d.outputs.cache-hit != 'true'
         run: |
-            sudo apt-get install -qq -y autoconf \
-            automake \
-            build-essential \
-            cmake \
-            git-core \
-            libass-dev \
-            libfreetype6-dev \
-            libgnutls28-dev \
-            libmp3lame-dev \
-            libsdl2-dev \
-            libtool \
-            libva-dev \
-            libvdpau-dev \
-            libvorbis-dev \
-            libxcb1-dev \
-            libxcb-shm0-dev \
-            libxcb-xfixes0-dev \
-            meson \
-            nasm \
-            ninja-build \
-            pkg-config \
-            texinfo \
-            wget \
-            yasm \
-            zlib1g-dev
+          sudo apt-get install -qq -y build-essential \
+          cmake \
+          git-core \
+          libtool \
+          pkg-config \
+          wget \
+          yasm \
+          zlib1g-dev
 
       - name: Build dav1d from source
         if: matrix.os == 'ubuntu-latest' && steps.cache-dav1d.outputs.cache-hit != 'true'
@@ -219,31 +185,14 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-aom.outputs.cache-hit != 'true'
         run: |
-            sudo apt-get install -qq -y autoconf \
-            automake \
-            build-essential \
-            cmake \
-            git-core \
-            libass-dev \
-            libfreetype6-dev \
-            libgnutls28-dev \
-            libmp3lame-dev \
-            libsdl2-dev \
-            libtool \
-            libva-dev \
-            libvdpau-dev \
-            libvorbis-dev \
-            libxcb1-dev \
-            libxcb-shm0-dev \
-            libxcb-xfixes0-dev \
-            meson \
-            nasm \
-            ninja-build \
-            pkg-config \
-            texinfo \
-            wget \
-            yasm \
-            zlib1g-dev
+          sudo apt-get install -qq -y build-essential \
+          cmake \
+          git-core \
+          libtool \
+          pkg-config \
+          wget \
+          yasm \
+          zlib1g-dev
 
       - name: Build AOM from source
         if: matrix.os == 'ubuntu-latest' && steps.cache-aom.outputs.cache-hit != 'true'
@@ -304,31 +253,14 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libvmaf.outputs.cache-hit != 'true'
         run: |
-            sudo apt-get install -qq -y autoconf \
-            automake \
-            build-essential \
-            cmake \
-            git-core \
-            libass-dev \
-            libfreetype6-dev \
-            libgnutls28-dev \
-            libmp3lame-dev \
-            libsdl2-dev \
-            libtool \
-            libva-dev \
-            libvdpau-dev \
-            libvorbis-dev \
-            libxcb1-dev \
-            libxcb-shm0-dev \
-            libxcb-xfixes0-dev \
-            meson \
-            nasm \
-            ninja-build \
-            pkg-config \
-            texinfo \
-            wget \
-            yasm \
-            zlib1g-dev
+          sudo apt-get install -qq -y build-essential \
+          cmake \
+          git-core \
+          libtool \
+          pkg-config \
+          wget \
+          yasm \
+          zlib1g-dev
 
       - name: Build libvmaf from source
         if: matrix.os == 'ubuntu-latest' && steps.cache-libvmaf.outputs.cache-hit != 'true'
@@ -394,31 +326,14 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libx264.outputs.cache-hit != 'true'
         run: |
-            sudo apt-get install -qq -y autoconf \
-            automake \
-            build-essential \
-            cmake \
-            git-core \
-            libass-dev \
-            libfreetype6-dev \
-            libgnutls28-dev \
-            libmp3lame-dev \
-            libsdl2-dev \
-            libtool \
-            libva-dev \
-            libvdpau-dev \
-            libvorbis-dev \
-            libxcb1-dev \
-            libxcb-shm0-dev \
-            libxcb-xfixes0-dev \
-            meson \
-            nasm \
-            ninja-build \
-            pkg-config \
-            texinfo \
-            wget \
-            yasm \
-            zlib1g-dev
+          sudo apt-get install -qq -y build-essential \
+          cmake \
+          git-core \
+          libtool \
+          pkg-config \
+          wget \
+          yasm \
+          zlib1g-dev
 
       - name: Build libx264 from source
         if: matrix.os == 'ubuntu-latest' && steps.cache-libx264.outputs.cache-hit != 'true'
@@ -480,28 +395,11 @@ jobs:
         - name: Install base dependencies for Ubuntu (APT)
           if: matrix.os == 'ubuntu-latest' && steps.cache-libx265.outputs.cache-hit != 'true'
           run: |
-              sudo apt-get install -qq -y autoconf \
-              automake \
-              build-essential \
+              sudo apt-get install -qq -y build-essential \
               cmake \
               git-core \
-              libass-dev \
-              libfreetype6-dev \
-              libgnutls28-dev \
-              libmp3lame-dev \
-              libsdl2-dev \
               libtool \
-              libva-dev \
-              libvdpau-dev \
-              libvorbis-dev \
-              libxcb1-dev \
-              libxcb-shm0-dev \
-              libxcb-xfixes0-dev \
-              meson \
-              nasm \
-              ninja-build \
               pkg-config \
-              texinfo \
               wget \
               yasm \
               zlib1g-dev
@@ -567,16 +465,16 @@ jobs:
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libopus.outputs.cache-hit != 'true'
         run: |
-            sudo apt-get install -qq -y autoconf \
-            automake \
-            build-essential \
-            cmake \
-            git-core \
-            libtool \
-            pkg-config \
-            wget \
-            yasm \
-            zlib1g-dev
+          sudo apt-get install -qq -y autoconf \
+          automake \
+          build-essential \
+          cmake \
+          git-core \
+          libtool \
+          pkg-config \
+          wget \
+          yasm \
+          zlib1g-dev
 
       - name: Build libopus from source
         if: matrix.os == 'ubuntu-latest' && steps.cache-libopus.outputs.cache-hit != 'true'
