@@ -292,6 +292,7 @@ jobs:
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Cache libvmaf build
+        id: cache-libvmaf
         uses: actions/cache@v4
         with:
           path: |
@@ -301,7 +302,7 @@ jobs:
           key: libvmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvmaf_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && steps.cache-libvmaf.outputs.cache-hit != 'true'
         run: |
             sudo apt-get install -qq -y autoconf \
             automake \
@@ -330,16 +331,11 @@ jobs:
             zlib1g-dev
 
       - name: Build libvmaf from source
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && steps.cache-libvmaf.outputs.cache-hit != 'true'
         run: |
           libvmaf_SRC_DIR="$HOME/ffmpeg_sources/libvmaf/libvmaf"
           libvmaf_BUILD_DIR="$HOME/ffmpeg_build/libvmaf_build"
           libvmaf_INSTALL_DIR="$HOME/ffmpeg_build/libvmaf"
-      
-          if [ -f "$HOME/libvmaf_installed.flag" ]; then
-            echo "libvmaf already installed from cache."
-            exit 0
-          fi
       
           mkdir -p "$libvmaf_BUILD_DIR"
           cd "$libvmaf_BUILD_DIR"
