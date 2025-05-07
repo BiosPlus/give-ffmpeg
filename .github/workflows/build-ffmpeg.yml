@@ -738,13 +738,26 @@ jobs:
           export CXXFLAGS="-O3 -mtune=generic"
 
           # Flags for optional codec support (enable only if installed)
-          AOM_FLAG=$(pkg-config --exists libaom && echo "--enable-libaom" && echo "Found libaom, enabling AOM support.") || true
-          DAV1D_FLAG=$(pkg-config --exists dav1d && echo "--enable-libdav1d" && echo "Found dav1d, enabling DAV1D support.") || true
-          SVTAV1_FLAG=$(pkg-config --exists SvtAv1Enc && echo "--enable-libsvtav1" && echo "Found SVT-AV1, enabling SVT-AV1 support.") || true
-          # libvmaf_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf Found libvmaf, enabling VMAF support.") || true
-          libx264_FLAG=$(pkg-config --exists libx264 && echo "--enable-libx264 Found libx264, enabling x264 support.") || true
-          libX265_FLAG=$(pkg-config --exists libx265 && echo "--enable-libx265 Found libx265, enabling x265 support.") || true
-          libopus_FLAG=$(pkg-config --exists libopus && echo "--enable-libopus Found libopus, enabling Opus support.") || true
+            AOM_FLAG=$(pkg-config --exists libaom && echo "--enable-libaom" || echo "")
+            [ -n "$AOM_FLAG" ] && echo "Found libaom, enabling AOM support."
+
+            DAV1D_FLAG=$(pkg-config --exists dav1d && echo "--enable-libdav1d" || echo "")
+            [ -n "$DAV1D_FLAG" ] && echo "Found dav1d, enabling DAV1D support."
+
+            SVTAV1_FLAG=$(pkg-config --exists SvtAv1Enc && echo "--enable-libsvtav1" || echo "")
+            [ -n "$SVTAV1_FLAG" ] && echo "Found SVT-AV1, enabling SVT-AV1 support."
+
+            # libvmaf_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
+            # [ -n "$libvmaf_FLAG" ] && echo "Found libvmaf, enabling VMAF support."
+
+            libx264_FLAG=$(pkg-config --exists libx264 && echo "--enable-libx264" || echo "")
+            [ -n "$libx264_FLAG" ] && echo "Found libx264, enabling x264 support."
+
+            libX265_FLAG=$(pkg-config --exists libx265 && echo "--enable-libx265" || echo "")
+            [ -n "$libX265_FLAG" ] && echo "Found libx265, enabling x265 support."
+
+            libopus_FLAG=$(pkg-config --exists libopus && echo "--enable-libopus" || echo "")
+            [ -n "$libopus_FLAG" ] && echo "Found libopus, enabling Opus support."
 
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
             --arch=${{ matrix.arch }} \
