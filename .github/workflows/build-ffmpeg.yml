@@ -382,6 +382,7 @@ jobs:
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       
       - name: Cache libx264 build
+        id: cache-libx264
         uses: actions/cache@v4
         with:
           path: |
@@ -391,7 +392,7 @@ jobs:
           key: libx264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx264_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && steps.cache-libx264.outputs.cache-hit != 'true'
         run: |
             sudo apt-get install -qq -y autoconf \
             automake \
