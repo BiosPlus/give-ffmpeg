@@ -713,25 +713,25 @@ jobs:
           X265_FLAG=$(pkg-config --exists x265 && echo "--enable-libx265" || echo "")
 
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
-          --arch=${{ matrix.arch }} \
-          --target-os=linux \
-          --enable-gpl \
-          --enable-gnutls \
-          ${AOM_FLAG} \
-          ${DAV1D_FLAG} \
-          ${SVTAV1_FLAG} \
-          ${VMAF_FLAG} \
-          --enable-libass \
-          --enable-libfdk-aac \
-          --enable-libfreetype \
-          --enable-libmp3lame \
-          --enable-libopus \
-          --enable-libvorbis \
-          --enable-libvpx \
-          ${X264_FLAG} \
-          ${X265_FLAG} \
-          --enable-nonfree \
-          --samples=fate-suite/
+            --arch=${{ matrix.arch }} \
+            --target-os=linux \
+            --enable-gpl \
+            --enable-gnutls \
+            $AOM_FLAG \
+            $DAV1D_FLAG \
+            $SVTAV1_FLAG \
+            $VMAF_FLAG \
+            --enable-libass \
+            --enable-libfdk-aac \
+            --enable-libfreetype \
+            --enable-libmp3lame \
+            --enable-libopus \
+            --enable-libvorbis \
+            --enable-libvpx \
+            $X264_FLAG \
+            $X265_FLAG \
+            --enable-nonfree \
+            --samples=fate-suite/
           
           make -j$(nproc)
 
