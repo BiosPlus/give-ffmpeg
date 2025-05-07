@@ -427,11 +427,6 @@ jobs:
             libx264_BUILD_DIR="$HOME/ffmpeg_build/libx264_build"
             libx264_INSTALL_DIR="$HOME/ffmpeg_build/libx264"
           
-            if [ -f "$HOME/libx264_installed.flag" ]; then
-              echo "libx264 already installed from cache."
-              exit 0
-            fi
-          
             mkdir -p "$libx264_BUILD_DIR"
             cd "$libx264_SRC_DIR"
           
