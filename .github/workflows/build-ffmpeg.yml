@@ -177,9 +177,6 @@ jobs:
           mkdir -p "$DAV1D_BUILD_DIR"
           cd "$DAV1D_BUILD_DIR"
 
-          export CFLAGS="-O3 -mtune=generic"
-          export CXXFLAGS="-O3 -mtune=generic"
-
           meson setup \
             --default-library=static \
             --prefix="$DAV1D_INSTALL_DIR" \
@@ -275,8 +272,6 @@ jobs:
       
           PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
             -DCMAKE_INSTALL_PREFIX="$AOM_INSTALL_DIR" \
-            -DCMAKE_C_FLAGS_RELEASE="-O3 -mtune=generic" \
-            -DCMAKE_CXX_FLAGS_RELEASE="-O3 -mtune=generic" \
             -DENABLE_TESTS=OFF \
             -DENABLE_NASM=on \
             "$AOM_SRC_DIR"
@@ -363,9 +358,6 @@ jobs:
       
           mkdir -p "$VMAF_BUILD_DIR"
           cd "$VMAF_BUILD_DIR"
-      
-          export CFLAGS="-O3 -mtune=generic"
-          export CXXFLAGS="-O3 -mtune=generic"
       
           meson setup \
             --buildtype=release \
