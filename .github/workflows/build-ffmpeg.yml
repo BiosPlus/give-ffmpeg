@@ -764,7 +764,7 @@ jobs:
             --enable-libmp3lame \
             $libopus_FLAG \
             --enable-libvorbis \
-            #libvpx_FLAG \
+            $libvpx_FLAG \
             $libx264_FLAG \
             $libX265_FLAG \ \
             --samples=fate-suite/
