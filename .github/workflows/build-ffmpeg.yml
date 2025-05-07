@@ -225,6 +225,13 @@ jobs:
             ~/aom_installed.flag
           key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
 
+      - name: Check for existing AOM build.
+        continue-on-error: false
+        run: |
+          if [ -f "$HOME/aom_installed.flag" ]; then
+            echo "AOM already installed from cache."
+            exit 0
+          fi
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
@@ -261,11 +268,6 @@ jobs:
           AOM_SRC_DIR="$HOME/ffmpeg_sources/aom"
           AOM_BUILD_DIR="$HOME/ffmpeg_build/aom_build"
           AOM_INSTALL_DIR="$HOME/ffmpeg_build/aom"
-      
-          if [ -f "$HOME/aom_installed.flag" ]; then
-            echo "AOM already installed from cache."
-            exit 0
-          fi
       
           mkdir -p "$AOM_BUILD_DIR"
           cd "$AOM_BUILD_DIR"
