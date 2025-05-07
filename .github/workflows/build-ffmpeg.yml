@@ -708,7 +708,7 @@ jobs:
           AOM_FLAG=$(pkg-config --exists libaom && echo "--enable-libaom" || echo "")
           DAV1D_FLAG=$(pkg-config --exists dav1d && echo "--enable-libdav1d" || echo "")
           SVTAV1_FLAG=$(pkg-config --exists SvtAv1Enc && echo "--enable-libsvtav1" || echo "")
-          VMAF_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
+          # VMAF_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
           X264_FLAG=$(pkg-config --exists x264 && echo "--enable-libx264" || echo "")
           X265_FLAG=$(pkg-config --exists x265 && echo "--enable-libx265" || echo "")
 
