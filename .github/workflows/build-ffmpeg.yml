@@ -637,6 +637,7 @@ jobs:
 
           # Flags for optional codec support (enable only if installed)
 
+            # Doesn't work
             AOM_FLAG=$(pkg-config --exists libaom && echo "--enable-libaom" || echo "")
             [ -n "$AOM_FLAG" ] && echo "Found libaom, enabling AOM support."
 
@@ -648,15 +649,19 @@ jobs:
             SVTAV1_FLAG=$(pkg-config --exists SvtAv1Enc && echo "--enable-libsvtav1" || echo "")
             [ -n "$SVTAV1_FLAG" ] && echo "Found SVT-AV1, enabling SVT-AV1 support."
 
+            # Doesn't work
             libx264_FLAG=$(pkg-config --exists libx264 && echo "--enable-libx264" || echo "")
             [ -n "$libx264_FLAG" ] && echo "Found libx264, enabling x264 support."
 
+            # Doesn't work
             libX265_FLAG=$(pkg-config --exists libx265 && echo "--enable-libx265" || echo "")
             [ -n "$libX265_FLAG" ] && echo "Found libx265, enabling x265 support."
 
+            # Doesn't work
             libopus_FLAG=$(pkg-config --exists libopus && echo "--enable-libopus" || echo "")
             [ -n "$libopus_FLAG" ] && echo "Found libopus, enabling Opus support."
 
+            # Doesn't work
             # libvmaf_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
             # [ -n "$libvmaf_FLAG" ] && echo "Found libvmaf, enabling VMAF support."
 
