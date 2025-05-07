@@ -645,9 +645,6 @@ jobs:
             SVTAV1_FLAG=$(pkg-config --exists SvtAv1Enc && echo "--enable-libsvtav1" || echo "")
             [ -n "$SVTAV1_FLAG" ] && echo "Found SVT-AV1, enabling SVT-AV1 support."
 
-            # libvmaf_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
-            # [ -n "$libvmaf_FLAG" ] && echo "Found libvmaf, enabling VMAF support."
-
             libx264_FLAG=$(pkg-config --exists libx264 && echo "--enable-libx264" || echo "")
             [ -n "$libx264_FLAG" ] && echo "Found libx264, enabling x264 support."
 
@@ -656,6 +653,9 @@ jobs:
 
             libopus_FLAG=$(pkg-config --exists libopus && echo "--enable-libopus" || echo "")
             [ -n "$libopus_FLAG" ] && echo "Found libopus, enabling Opus support."
+
+            # libvmaf_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
+            # [ -n "$libvmaf_FLAG" ] && echo "Found libvmaf, enabling VMAF support."
 
           ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
             --arch=${{ matrix.arch }} \
