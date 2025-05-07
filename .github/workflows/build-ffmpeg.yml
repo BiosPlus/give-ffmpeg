@@ -732,7 +732,6 @@ jobs:
             $X265_FLAG \
             --enable-nonfree \
             --samples=fate-suite/
-          
-          make -j$(nproc)
-
-          make install
+            
+            make -j$(nproc)
+            make install
