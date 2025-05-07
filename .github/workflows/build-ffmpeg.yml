@@ -283,7 +283,7 @@ jobs:
       
           touch "$HOME/aom_installed.flag"
 
-  dependancy-vmaf:
+  dependancy-libvmaf:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -297,25 +297,25 @@ jobs:
           mkdir -p $HOME/ffmpeg_sources
           mkdir -p $HOME/ffmpeg_build
 
-      - name: Clone VMAF source
+      - name: Clone libvmaf source
         run: |
           cd $HOME/ffmpeg_sources
-          git clone --depth 1 --branch libvmaf_v3 https://github.com/Netflix/vmaf.git
+          git clone --depth 1 --branch libvmaf_v3 https://github.com/Netflix/vmaf.git libvmaf
 
-      - name: Get vmaf commit hash
-        id: vmaf_hash
+      - name: Get libvmaf commit hash
+        id: libvmaf_hash
         run: |
-          cd $HOME/ffmpeg_sources/vmaf
+          cd $HOME/ffmpeg_sources/libvmaf
           echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Cache vmaf build
+      - name: Cache libvmaf build
         uses: actions/cache@v4
         with:
           path: |
-            ~/ffmpeg_build/vmaf_build
-            ~/ffmpeg_build/vmaf
+            ~/ffmpeg_build/libvmaf_build
+            ~/ffmpeg_build/libvmaf
             ~/libvmaf_installed.flag
-          key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.vmaf_hash.outputs.hash }}
+          key: libvmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvmaf_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
@@ -346,30 +346,30 @@ jobs:
             yasm \
             zlib1g-dev
 
-      - name: Build VMAF from source
+      - name: Build libvmaf from source
         if: matrix.os == 'ubuntu-latest'
         run: |
-          VMAF_SRC_DIR="$HOME/ffmpeg_sources/vmaf/libvmaf"
-          VMAF_BUILD_DIR="$HOME/ffmpeg_build/vmaf_build"
-          VMAF_INSTALL_DIR="$HOME/ffmpeg_build/vmaf"
+          libvmaf_SRC_DIR="$HOME/ffmpeg_sources/libvmaf/libvmaf"
+          libvmaf_BUILD_DIR="$HOME/ffmpeg_build/libvmaf_build"
+          libvmaf_INSTALL_DIR="$HOME/ffmpeg_build/libvmaf"
       
           if [ -f "$HOME/libvmaf_installed.flag" ]; then
             echo "libvmaf already installed from cache."
             exit 0
           fi
       
-          mkdir -p "$VMAF_BUILD_DIR"
-          cd "$VMAF_BUILD_DIR"
+          mkdir -p "$libvmaf_BUILD_DIR"
+          cd "$libvmaf_BUILD_DIR"
       
           meson setup \
             --buildtype=release \
             --default-library=static \
-            --prefix="$VMAF_INSTALL_DIR" \
-            --libdir="$VMAF_INSTALL_DIR/lib" \
+            --prefix="$libvmaf_INSTALL_DIR" \
+            --libdir="$libvmaf_INSTALL_DIR/lib" \
             --bindir="$HOME/bin" \
             -Denable_tests=false \
             -Denable_docs=false \
-            "$VMAF_SRC_DIR"
+            "$libvmaf_SRC_DIR"
       
           ninja
           ninja install
@@ -556,15 +556,14 @@ jobs:
             make install
                
             touch "$HOME/libx265_installed.flag"
-            
-        
+                 
   build-ffmpeg:
     runs-on: ${{ matrix.os }}
     needs: 
       - dependancy-aom
       - dependancy-dav1d
       - dependancy-svtav1
-      - dependancy-vmaf
+      - dependancy-libvmaf
       - dependancy-libx264
       - dependancy-libx265
 
@@ -618,14 +617,14 @@ jobs:
             ~/dav1d_installed.flag
           key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
-      - name: Cache VMAF build
+      - name: Cache libvmaf build
         uses: actions/cache@v4
         with:
           path: |
-            ~/ffmpeg_build/vmaf_build
-            ~/ffmpeg_build/vmaf
+            ~/ffmpeg_build/libvmaf_build
+            ~/ffmpeg_build/libvmaf
             ~/libvmaf_installed.flag
-          key: vmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.vmaf_hash.outputs.hash }}
+          key: libvmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvmaf_hash.outputs.hash }}
 
       - name: Cache libx264 build
         uses: actions/cache@v4
@@ -714,7 +713,7 @@ jobs:
           AOM_FLAG=$(pkg-config --exists libaom && echo "--enable-libaom" || echo "")
           DAV1D_FLAG=$(pkg-config --exists dav1d && echo "--enable-libdav1d" || echo "")
           SVTAV1_FLAG=$(pkg-config --exists SvtAv1Enc && echo "--enable-libsvtav1" || echo "")
-          # VMAF_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
+          # libvmaf_FLAG=$(pkg-config --exists libvmaf && echo "--enable-libvmaf" || echo "")
           libx264_FLAG=$(pkg-config --exists libx264 && echo "--enable-libx264" || echo "")
           libX265_FLAG=$(pkg-config --exists libx265 && echo "--enable-libx265" || echo "")
 
@@ -726,7 +725,7 @@ jobs:
             $AOM_FLAG \
             $DAV1D_FLAG \
             $SVTAV1_FLAG \
-            $VMAF_FLAG \
+            $libvmaf_FLAG \
             --enable-libass \
             --enable-libfdk-aac \
             --enable-libfreetype \
