@@ -167,14 +167,7 @@ jobs:
           DAV1D_SRC_DIR="$HOME/ffmpeg_sources/dav1d"
           DAV1D_BUILD_DIR="$HOME/ffmpeg_build/dav1d_build"
           DAV1D_INSTALL_DIR="$HOME/ffmpeg_build/dav1d"
-      
-          if [ -f "$HOME/dav1d_installed.flag" ]; then
-            echo "dav1d already installed from cache."
-            exit 0
-          fi
-      
-          # git -C "$DAV1D_SRC_DIR" pull 2>/dev/null || git clone --depth 1 https://code.videolan.org/videolan/dav1d.git
-      
+                
           mkdir -p "$DAV1D_BUILD_DIR"
           cd "$DAV1D_BUILD_DIR"
 
