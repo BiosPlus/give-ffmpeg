@@ -531,27 +531,34 @@ jobs:
         - name: Build x265 from source
           if: matrix.os == 'ubuntu-latest'
           run: |
-                x265_SRC_DIR="$HOME/ffmpeg_sources/x265"
-                x265_BUILD_DIR="$HOME/ffmpeg_build/x265_build"
-                x265_INSTALL_DIR="$HOME/ffmpeg_build/x265"
-              
-                if [ -f "$HOME/x265_installed.flag" ]; then
-                  echo "x265 already installed from cache."
-                  exit 0
-                fi
-              
-                mkdir -p "$x265_BUILD_DIR"
-                cd "$x265_SRC_DIR/build/linux"
-              
-                PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
-                -DCMAKE_INSTALL_PREFIX="$x265_INSTALL_DIR" \
-                -DENABLE_SHARED=off \
-                "$x265_SRC_DIR/source"
-              
-                PATH="$HOME/bin:$PATH" make -j"$(nproc)"
-                make install
-              
-                touch "$HOME/x265_installed.flag"
+            x265_SRC_DIR="$HOME/ffmpeg_sources/x265"
+            x265_BUILD_DIR="$HOME/ffmpeg_build/x265_build"
+            x265_INSTALL_DIR="$HOME/ffmpeg_build/x265"
+          
+            if [ -f "$HOME/x265_installed.flag" ]; then
+              echo "x265 already installed from cache."
+              exit 0
+            fi
+          
+            mkdir -p "$x265_BUILD_DIR"
+            cd "$x265_SRC_DIR/build/linux"
+          
+            PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
+              -DPKG_CONFIG_PATH="$HOME/ffmpeg_build/x265/lib/pkgconfig"
+              -DCMAKE_INSTALL_PREFIX="$x265_INSTALL_DIR" \
+              -DENABLE_SHARED=off \
+              -DENABLE_PIC=on \
+              -DCMAKE_POSITION_INDEPENDENT_CODE=on \
+              "$x265_SRC_DIR/source"
+          
+            PATH="$HOME/bin:$PATH" make -j"$(nproc)"
+            make install
+          
+            touch "$HOME/x265_installed.flag"
+
+            export PKG_CONFIG_PATH="$x265_INSTALL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH"
+            pkg-config --list-all | grep x265 || echo "DUDE WHAT THE FUCK"
+
 
   build-ffmpeg:
     runs-on: ${{ matrix.os }}
