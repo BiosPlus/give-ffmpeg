@@ -264,7 +264,8 @@ jobs:
             pkg-config \
             wget \
             yasm \
-            zlib1g-dev
+            zlib1g-dev \
+            nasm
 
       - name: Build libvmaf from source
         if: matrix.os == 'ubuntu-latest' && steps.cache-libvmaf.outputs.cache-hit != 'true'
