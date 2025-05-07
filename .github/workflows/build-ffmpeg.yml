@@ -534,30 +534,37 @@ jobs:
             x265_SRC_DIR="$HOME/ffmpeg_sources/x265"
             x265_BUILD_DIR="$HOME/ffmpeg_build/x265_build"
             x265_INSTALL_DIR="$HOME/ffmpeg_build/x265"
-          
+            
             if [ -f "$HOME/x265_installed.flag" ]; then
               echo "x265 already installed from cache."
               exit 0
             fi
-          
+        
             mkdir -p "$x265_BUILD_DIR"
             cd "$x265_SRC_DIR/build/linux"
-          
+        
+            # Configure and build x265 (note: source is nested inside /source)
             PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
-              -DPKG_CONFIG_PATH="$HOME/ffmpeg_build/x265/lib/pkgconfig"
               -DCMAKE_INSTALL_PREFIX="$x265_INSTALL_DIR" \
               -DENABLE_SHARED=off \
               -DENABLE_PIC=on \
               -DCMAKE_POSITION_INDEPENDENT_CODE=on \
               "$x265_SRC_DIR/source"
-          
+        
             PATH="$HOME/bin:$PATH" make -j"$(nproc)"
             make install
-          
-            touch "$HOME/x265_installed.flag"
-
+        
+            # Sanity check: does the .pc file actually exist?
+            echo "Installed x265.pc:"
+            find "$x265_INSTALL_DIR" -name 'x265.pc'
+        
+            # Make sure pkg-config can find it
             export PKG_CONFIG_PATH="$x265_INSTALL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH"
-            pkg-config --list-all | grep x265 || echo "DUDE WHAT THE FUCK"
+            echo "pkg-config x265 check:"
+            pkg-config --exists x265 && echo "✅ x265 detected by pkg-config" || echo "❌ x265 NOT detected by pkg-config"
+        
+            touch "$HOME/x265_installed.flag"
+        
 
 
   build-ffmpeg:
