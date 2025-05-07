@@ -471,7 +471,96 @@ jobs:
             make install
           
             touch "$HOME/x264_installed.flag"
-          
+
+  dependancy-x265:
+      runs-on: ubuntu-latest
+      strategy:
+      
+        fail-fast: false
+        matrix:
+          os: [ubuntu-latest]
+          arch: [x86_64]
+          # Other arch: aarch64, arm, riscv, ppc, s390
+      steps:
+        - name: Create ffmpeg_sources directory
+          run: |
+            mkdir -p $HOME/ffmpeg_sources
+            mkdir -p $HOME/ffmpeg_build
+        
+        - name: Clone x265 source
+          run: |
+            cd $HOME/ffmpeg_sources
+            git clone https://bitbucket.org/multicoreware/x265_git.git x265
+
+        - name: Get x265 commit hash
+          id: x265_hash
+          run: |
+            cd $HOME/ffmpeg_sources/x265
+            echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+        
+        - name: Cache x265 build
+          uses: actions/cache@v4
+          with:
+            path: |
+              ~/ffmpeg_build/x265_build
+              ~/ffmpeg_build/x265
+              ~/x265_installed.flag
+            key: x265-${{ runner.os }}-${{ matrix.arch }}-${{ steps.x265_hash.outputs.hash }}
+
+        - name: Install base dependencies for Ubuntu (APT)
+          if: matrix.os == 'ubuntu-latest'
+          run: |
+              sudo apt-get install -qq -y autoconf \
+              automake \
+              build-essential \
+              cmake \
+              git-core \
+              libass-dev \
+              libfreetype6-dev \
+              libgnutls28-dev \
+              libmp3lame-dev \
+              libsdl2-dev \
+              libtool \
+              libva-dev \
+              libvdpau-dev \
+              libvorbis-dev \
+              libxcb1-dev \
+              libxcb-shm0-dev \
+              libxcb-xfixes0-dev \
+              meson \
+              nasm \
+              ninja-build \
+              pkg-config \
+              texinfo \
+              wget \
+              yasm \
+              zlib1g-dev
+
+        - name: Build x265 from source
+          if: matrix.os == 'ubuntu-latest'
+          run: |
+                x265_SRC_DIR="$HOME/ffmpeg_sources/x265"
+                x265_BUILD_DIR="$HOME/ffmpeg_build/x265_build"
+                x265_INSTALL_DIR="$HOME/ffmpeg_build/x265"
+              
+                if [ -f "$HOME/x265_installed.flag" ]; then
+                echo "x265 already installed from cache."
+                exit 0
+                fi
+              
+                mkdir -p "$x265_BUILD_DIR"
+                cd "$x265_SRC_DIR/build/linux"
+              
+                PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" \
+                -DCMAKE_INSTALL_PREFIX="$x265_INSTALL_DIR" \
+                -DENABLE_SHARED=off \
+                "$x265_SRC_DIR/source"
+              
+                PATH="$HOME/bin:$PATH" make -j"$(nproc)"
+                make install
+              
+                touch "$HOME/x265_installed.flag"
+
   build-ffmpeg:
     runs-on: ${{ matrix.os }}
     needs: 
