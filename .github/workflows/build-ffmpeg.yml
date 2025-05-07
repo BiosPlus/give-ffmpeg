@@ -421,7 +421,7 @@ jobs:
             zlib1g-dev
 
       - name: Build libx264 from source
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && steps.cache-libx264.outputs.cache-hit != 'true'
         run: |
             libx264_SRC_DIR="$HOME/ffmpeg_sources/libx264"
             libx264_BUILD_DIR="$HOME/ffmpeg_build/libx264_build"
