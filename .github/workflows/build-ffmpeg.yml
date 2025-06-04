@@ -704,6 +704,19 @@ jobs:
       - name: Install libfdk-aac for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt install -qq libfdk-aac-dev
+
+      - name: Validate gnutls presence
+        run: |
+          if ! pkg-config --modversion gnutls >/dev/null 2>&1; then
+            echo "⚠️ gnutls not found, attempting to install..."
+            sudo apt install -qq -y libgnutls28-dev
+            pkg-config --modversion gnutls || {
+              echo "❌ gnutls is required but could not be installed.";
+              exit 1;
+            }
+          else
+            echo "✅ gnutls version $(pkg-config --modversion gnutls) found."
+          fi
              
       - name: Build FFmpeg
         run: |
