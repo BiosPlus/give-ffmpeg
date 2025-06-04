@@ -726,7 +726,7 @@ jobs:
           export PKG_CONFIG_PATH=$(find ~/ffmpeg_build -type f -name '*.pc' -exec dirname {} \; | sort -u | tr '\n' ':' | sed 's/:$//')
           export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$(pkg-config --variable pc_path pkg-config)"
 
-          # Set compiler flags
+# Set compiler flags
           export CFLAGS="-O3 -mtune=generic"
           export CXXFLAGS="-O3 -mtune=generic"
 
