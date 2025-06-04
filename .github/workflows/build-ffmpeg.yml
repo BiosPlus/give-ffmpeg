@@ -552,8 +552,8 @@ jobs:
 
           mkdir -p "$libvpx_BUILD_DIR"
 
-          cd $HOME/ffmpeg_sources/libvpx
-          PATH="$HOME/bin:$PATH" ./configure --prefix="$libvpx_BUILD_DIR" --disable-examples --disable-unit-tests --enable-vp9-highbitdepth --as=yasm
+          cd "$libvpx_SRC_DIR"
+          PATH="$HOME/bin:$PATH" ./configure --prefix="$libvpx_INSTALL_DIR" --disable-examples --disable-unit-tests --enable-vp9-highbitdepth --as=yasm
           make
           make install
 
