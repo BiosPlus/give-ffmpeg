@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  dependancy-svtav1:
+  dependency-svtav1:
     runs-on: ubuntu-latest
     strategy:
     
@@ -76,7 +76,7 @@ jobs:
 
           touch "$HOME/svtav1_installed.flag"
 
-  dependancy-dav1d:
+  dependency-dav1d:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -148,7 +148,7 @@ jobs:
       
           touch "$HOME/dav1d_installed.flag"
 
-  dependancy-aom:
+  dependency-aom:
     runs-on: ubuntu-latest
     strategy:
     
@@ -218,7 +218,7 @@ jobs:
       
           touch "$HOME/aom_installed.flag"
 
-  dependancy-libvmaf:
+  dependency-libvmaf:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -292,7 +292,7 @@ jobs:
       
           touch "$HOME/libvmaf_installed.flag"
 
-  dependancy-libx264:
+  dependency-libx264:
     runs-on: ubuntu-latest
     strategy:
     
@@ -362,7 +362,7 @@ jobs:
           
             touch "$HOME/libx264_installed.flag"
 
-  dependancy-libx265:
+  dependency-libx265:
       runs-on: ubuntu-latest
       strategy:
       
@@ -432,7 +432,7 @@ jobs:
                
             touch "$HOME/libx265_installed.flag"
                  
-  dependancy-libopus:
+  dependency-libopus:
     runs-on: ubuntu-latest
     strategy:
     
@@ -492,7 +492,7 @@ jobs:
           make install
           touch "$HOME/libopus_installed.flag"
   
-  dependancy-libvpx:
+  dependency-libvpx:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -562,14 +562,14 @@ jobs:
   build-ffmpeg:
     runs-on: ${{ matrix.os }}
     needs: 
-      - dependancy-aom
-      - dependancy-dav1d
-      - dependancy-libopus
-      - dependancy-libvmaf
-      - dependancy-libvpx
-      - dependancy-libx264
-      - dependancy-libx265
-      - dependancy-svtav1
+      - dependency-aom
+      - dependency-dav1d
+      - dependency-libopus
+      - dependency-libvmaf
+      - dependency-libvpx
+      - dependency-libx264
+      - dependency-libx265
+      - dependency-svtav1
 
     strategy:
       fail-fast: false
