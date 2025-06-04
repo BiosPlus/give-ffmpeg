@@ -715,7 +715,7 @@ jobs:
           export CXXFLAGS="-O3 -mtune=generic"
 
           # Define an array of libraries to check
-          LIBRARIES=("libaom" "dav1d" "SvtAv1Enc" "libx264" "libx265" "libopus" "vpx")
+          LIBRARIES=("libaom" "dav1d" "SvtAv1Enc" "libx264" "libx265" "libopus" "vpx" "libvmaf")
 
           # Initialize flags
           CONFIG_FLAGS="--enable-nonfree --enable-gpl --enable-gnutls --enable-libass --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libvorbis"
