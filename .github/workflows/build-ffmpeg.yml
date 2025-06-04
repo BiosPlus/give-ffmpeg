@@ -743,7 +743,8 @@ jobs:
               fi
             done
 
-          ./configure --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
+          ./configure --pkg-config-flags="--static" \
+          --prefix=../build/${{ matrix.os }}-${{ matrix.arch }} \
           --arch=${{ matrix.arch }} \
           --target-os=linux \
           $CONFIG_FLAGS \
