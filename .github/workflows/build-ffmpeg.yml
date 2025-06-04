@@ -450,7 +450,7 @@ jobs:
       - name: Clone libopus source
         run: |
           cd $HOME/ffmpeg_sources
-          git -C opus pull 2> /dev/null || git clone --depth 1 https://github.com/xiph/opus.git libopus
+          git -C libopus pull 2> /dev/null || git clone --depth 1 https://github.com/xiph/opus.git libopus
       
       - name: Get libopus commit hash
         id: libopus_hash
