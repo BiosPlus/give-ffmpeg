@@ -3,6 +3,8 @@ name: "Build FFmpeg for Linux"
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   dependency-svtav1:
@@ -38,7 +40,7 @@ jobs:
             ~/ffmpeg_build/SVT-AV1_build
             ~/ffmpeg_build/SVT-AV1
             ~/svtav1_installed.flag
-          key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-svtav1.outputs.cache-hit != 'true'
@@ -109,7 +111,7 @@ jobs:
             ~/ffmpeg_build/dav1d_build
             ~/ffmpeg_build/dav1d
             ~/dav1d_installed.flag
-          key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-dav1d.outputs.cache-hit != 'true'
@@ -182,7 +184,7 @@ jobs:
             ~/ffmpeg_build/aom_build
             ~/ffmpeg_build/aom
             ~/aom_installed.flag
-          key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
       
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-aom.outputs.cache-hit != 'true'
@@ -251,7 +253,7 @@ jobs:
             ~/ffmpeg_build/libvmaf_build
             ~/ffmpeg_build/libvmaf
             ~/libvmaf_installed.flag
-          key: libvmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvmaf_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-libvmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvmaf_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libvmaf.outputs.cache-hit != 'true'
@@ -326,7 +328,7 @@ jobs:
             ~/ffmpeg_build/libx264_build
             ~/ffmpeg_build/libx264
             ~/libx264_installed.flag
-          key: libx264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx264_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-libx264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx264_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libx264.outputs.cache-hit != 'true'
@@ -396,7 +398,7 @@ jobs:
               ~/ffmpeg_build/libx265_build
               ~/ffmpeg_build/libx265
               ~/libx265_installed.flag
-            key: libx265-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx265_hash.outputs.hash }}
+            key: ${{ github.event.pull_request.number || github.event_name }}-libx265-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx265_hash.outputs.hash }}
 
         - name: Install base dependencies for Ubuntu (APT)
           if: matrix.os == 'ubuntu-latest' && steps.cache-libx265.outputs.cache-hit != 'true'
@@ -466,7 +468,7 @@ jobs:
             ~/ffmpeg_build/libopus_build
             ~/ffmpeg_build/libopus
             ~/libopus_installed.flag
-          key: libopus-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libopus_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-libopus-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libopus_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libopus.outputs.cache-hit != 'true'
@@ -526,7 +528,7 @@ jobs:
             ~/ffmpeg_build/libvpx_build
             ~/ffmpeg_build/libvpx
             ~/libvpx_installed.flag
-          key: libvpx-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvpx_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-libvpx-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvpx_hash.outputs.hash }}
 
       - name: Install base dependencies for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest' && steps.cache-libvpx.outputs.cache-hit != 'true'
@@ -601,7 +603,7 @@ jobs:
             ~/ffmpeg_build/aom_build
             ~/ffmpeg_build/aom
             ~/aom_installed.flag
-          key: aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-aom-${{ runner.os }}-${{ matrix.arch }}-${{ steps.aom_hash.outputs.hash }}
   
       - name: Cache SVT-AV1 build
         uses: actions/cache/restore@v4
@@ -610,7 +612,7 @@ jobs:
             ~/ffmpeg_build/SVT-AV1_build
             ~/ffmpeg_build/SVT-AV1
             ~/svtav1_installed.flag
-          key: svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-svtav1-${{ runner.os }}-${{ matrix.arch }}-${{ steps.svtav1_hash.outputs.hash }}
       
       - name: Cache dav1d build
         uses: actions/cache/restore@v4
@@ -619,7 +621,7 @@ jobs:
             ~/ffmpeg_build/dav1d_build
             ~/ffmpeg_build/dav1d
             ~/dav1d_installed.flag
-          key: dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-dav1d-${{ runner.os }}-${{ matrix.arch }}-${{ steps.dav1d_hash.outputs.hash }}
 
       - name: Cache libvmaf build
         uses: actions/cache/restore@v4
@@ -628,7 +630,7 @@ jobs:
             ~/ffmpeg_build/libvmaf_build
             ~/ffmpeg_build/libvmaf
             ~/libvmaf_installed.flag
-          key: libvmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvmaf_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-libvmaf-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvmaf_hash.outputs.hash }}
 
       - name: Cache libx264 build
         uses: actions/cache/restore@v4
@@ -637,7 +639,7 @@ jobs:
             ~/ffmpeg_build/libx264_build
             ~/ffmpeg_build/libx264
             ~/libx264_installed.flag
-          key: libx264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx264_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-libx264-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx264_hash.outputs.hash }}
 
       - name: Cache libx265 build
         uses: actions/cache/restore@v4
@@ -646,7 +648,7 @@ jobs:
             ~/ffmpeg_build/libx265_build
             ~/ffmpeg_build/libx265
             ~/libx265_installed.flag
-          key: libx265-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx265_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-libx265-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libx265_hash.outputs.hash }}
 
       - name: Cache libopus build
         uses: actions/cache/restore@v4
@@ -655,7 +657,7 @@ jobs:
             ~/ffmpeg_build/libopus_build
             ~/ffmpeg_build/libopus
             ~/libopus_installed.flag
-          key: libopus-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libopus_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-libopus-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libopus_hash.outputs.hash }}
 
       - name: Cache libvpx build
         uses: actions/cache/restore@v4
@@ -664,7 +666,7 @@ jobs:
             ~/ffmpeg_build/libvpx_build
             ~/ffmpeg_build/libvpx
             ~/libvpx_installed.flag
-          key: libvpx-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvpx_hash.outputs.hash }}
+          key: ${{ github.event.pull_request.number || github.event_name }}-libvpx-${{ runner.os }}-${{ matrix.arch }}-${{ steps.libvpx_hash.outputs.hash }}
 
       - name: Update packages for Ubuntu (APT)
         if: matrix.os == 'ubuntu-latest'
