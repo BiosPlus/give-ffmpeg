@@ -751,3 +751,5 @@ jobs:
 
           make -j$(nproc)
           make install
+      - name: Verify FFmpeg binary
+        run: build/${{ matrix.os }}-${{ matrix.arch }}/bin/ffmpeg -version
